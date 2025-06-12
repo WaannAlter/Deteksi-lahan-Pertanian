@@ -1,97 +1,12 @@
 [
   {
-    "filename": "DJI_20240907173820_0040_MS_NDVI_Colored.JPG",
-    "detections": {
-      "level2": 2
-    },
-    "total_objects": 2,
-    "timestamp": "2025-06-12T15:33:37.462585",
-    "plot_id": "-7.23953_112.55468",
-    "latitude": -7.239525,
-    "longitude": 112.554683,
-    "altitude": 53.0,
-    "capture_date": "2024-09-07",
-    "capture_time": "17:38:22"
-  },
-  {
-    "filename": "DJI_20241109140027_0004_D.JPG",
-    "detections": {
-      "level2": 2
-    },
-    "total_objects": 2,
-    "timestamp": "2025-06-12T15:33:38.178061",
-    "plot_id": "-7.93116_110.22831",
-    "latitude": -7.931156,
-    "longitude": 110.228311,
-    "altitude": 57.351,
-    "capture_date": "2024-11-09",
-    "capture_time": "14:00:27"
-  },
-  {
-    "filename": "DJI_20241109140116_0029_D.JPG",
-    "detections": {
-      "level2": 3
-    },
-    "total_objects": 3,
-    "timestamp": "2025-06-12T15:33:41.268146",
-    "plot_id": "-7.93136_110.22909",
-    "latitude": -7.931364,
-    "longitude": 110.229093,
-    "altitude": 56.545,
-    "capture_date": "2024-11-09",
-    "capture_time": "14:01:16"
-  },
-  {
-    "filename": "DJI_20250611120847_0051_D.JPG",
-    "detections": {
-      "level2": 2
-    },
-    "total_objects": 2,
-    "timestamp": "2025-06-12T15:33:44.399715",
-    "plot_id": "-7.40566_112.68975",
-    "latitude": -7.405664,
-    "longitude": 112.689745,
-    "altitude": null,
-    "capture_date": "2025-06-11",
-    "capture_time": "12:08:47"
-  },
-  {
-    "filename": "DJI_20250611120849_0052_D.JPG",
-    "detections": {
-      "level4": 2,
-      "level5": 1
-    },
-    "total_objects": 3,
-    "timestamp": "2025-06-12T15:33:44.934116",
-    "plot_id": "-7.40569_112.68974",
-    "latitude": -7.405695,
-    "longitude": 112.689741,
-    "altitude": null,
-    "capture_date": "2025-06-11",
-    "capture_time": "10:08:49"
-  },
-  {
-    "filename": "DJI_20250611120851_0053_D.JPG",
-    "detections": {
-      "level2": 2
-    },
-    "total_objects": 2,
-    "timestamp": "2025-06-12T15:33:45.652245",
-    "plot_id": "-7.40573_112.68974",
-    "latitude": -7.405728,
-    "longitude": 112.689736,
-    "altitude": null,
-    "capture_date": "2025-06-11",
-    "capture_time": "12:08:51"
-  },
-  {
     "filename": "DJI_0190.JPG",
     "detections": {
       "level2": 1,
       "level3": 1
     },
     "total_objects": 2,
-    "timestamp": "2025-06-12T14:52:12.464825",
+    "timestamp": "2025-06-12T23:32:23.573089",
     "plot_id": "-7.23803_112.54912",
     "latitude": -7.238025,
     "longitude": 112.549124,
@@ -106,7 +21,7 @@
       "level3": 1
     },
     "total_objects": 5,
-    "timestamp": "2025-06-12T14:52:13.853597",
+    "timestamp": "2025-06-12T23:32:24.986994",
     "plot_id": "-7.24003_112.54626",
     "latitude": -7.240033,
     "longitude": 112.546264,
@@ -120,7 +35,7 @@
       "level2": 2
     },
     "total_objects": 2,
-    "timestamp": "2025-06-12T14:52:15.763346",
+    "timestamp": "2025-06-12T23:32:26.849690",
     "plot_id": "-7.2394_112.5464",
     "latitude": -7.239399,
     "longitude": 112.546396,
@@ -134,7 +49,7 @@
       "level2": 2
     },
     "total_objects": 2,
-    "timestamp": "2025-06-12T14:52:17.395253",
+    "timestamp": "2025-06-12T23:32:28.619199",
     "plot_id": "-7.23918_112.54635",
     "latitude": -7.239177,
     "longitude": 112.546345,
@@ -148,7 +63,7 @@
       "level2": 3
     },
     "total_objects": 3,
-    "timestamp": "2025-06-12T14:52:19.395309",
+    "timestamp": "2025-06-12T23:32:31.070984",
     "plot_id": "-7.23943_112.54631",
     "latitude": -7.239429,
     "longitude": 112.546305,
@@ -162,7 +77,7 @@
       "level2": 2
     },
     "total_objects": 2,
-    "timestamp": "2025-06-12T14:52:21.264057",
+    "timestamp": "2025-06-12T23:32:33.029841",
     "plot_id": "-7.23977_112.54625",
     "latitude": -7.239765,
     "longitude": 112.546249,
@@ -176,7 +91,7 @@
       "level5": 2
     },
     "total_objects": 2,
-    "timestamp": "2025-06-12T14:52:23.238850",
+    "timestamp": "2025-06-12T23:32:35.151958",
     "plot_id": "-7.23917_112.54617",
     "latitude": -7.239168,
     "longitude": 112.546173,
@@ -191,7 +106,7 @@
       "level3": 1
     },
     "total_objects": 3,
-    "timestamp": "2025-06-12T14:52:24.047780",
+    "timestamp": "2025-06-12T23:32:36.068840",
     "plot_id": "-7.24007_112.54605",
     "latitude": -7.24007,
     "longitude": 112.546052,
@@ -205,7 +120,7 @@
       "level2": 2
     },
     "total_objects": 2,
-    "timestamp": "2025-06-12T14:52:25.270465",
+    "timestamp": "2025-06-12T23:32:37.389645",
     "plot_id": "-7.23997_112.54607",
     "latitude": -7.239968,
     "longitude": 112.546069,
@@ -219,7 +134,7 @@
       "level2": 2
     },
     "total_objects": 2,
-    "timestamp": "2025-06-12T14:52:26.478652",
+    "timestamp": "2025-06-12T23:32:38.889099",
     "plot_id": "-7.2398_112.54623",
     "latitude": -7.2398,
     "longitude": 112.546229,
@@ -233,7 +148,7 @@
       "level4": 2
     },
     "total_objects": 2,
-    "timestamp": "2025-06-12T14:52:28.249736",
+    "timestamp": "2025-06-12T23:32:40.281099",
     "plot_id": "-7.23947_112.55379",
     "latitude": -7.239466,
     "longitude": 112.553789,
@@ -247,7 +162,7 @@
       "level2": 2
     },
     "total_objects": 2,
-    "timestamp": "2025-06-12T14:52:29.047984",
+    "timestamp": "2025-06-12T23:32:41.276661",
     "plot_id": "-7.23953_112.55468",
     "latitude": -7.239525,
     "longitude": 112.554683,
@@ -262,7 +177,7 @@
       "level2": 2
     },
     "total_objects": 3,
-    "timestamp": "2025-06-12T14:52:29.755942",
+    "timestamp": "2025-06-12T23:32:42.009237",
     "plot_id": "-7.23942_112.5547",
     "latitude": -7.239417,
     "longitude": 112.554701,
@@ -276,7 +191,7 @@
       "level2": 2
     },
     "total_objects": 2,
-    "timestamp": "2025-06-12T14:52:30.541150",
+    "timestamp": "2025-06-12T23:32:42.708248",
     "plot_id": "-7.23942_112.5547",
     "latitude": -7.239417,
     "longitude": 112.554701,
@@ -290,7 +205,7 @@
       "level2": 4
     },
     "total_objects": 4,
-    "timestamp": "2025-06-12T14:52:36.797658",
+    "timestamp": "2025-06-12T23:32:49.117972",
     "plot_id": "-7.2394_112.55443",
     "latitude": -7.239399,
     "longitude": 112.554433,
@@ -304,7 +219,7 @@
       "level2": 2
     },
     "total_objects": 2,
-    "timestamp": "2025-06-12T14:52:43.061496",
+    "timestamp": "2025-06-12T23:32:55.314806",
     "plot_id": "-7.23938_112.5541",
     "latitude": -7.239376,
     "longitude": 112.554101,
@@ -318,7 +233,7 @@
       "level2": 4
     },
     "total_objects": 4,
-    "timestamp": "2025-06-12T14:52:49.206850",
+    "timestamp": "2025-06-12T23:33:01.437913",
     "plot_id": "-7.23918_112.55439",
     "latitude": -7.239178,
     "longitude": 112.554386,
@@ -332,7 +247,7 @@
       "level2": 4
     },
     "total_objects": 4,
-    "timestamp": "2025-06-12T14:52:53.617888",
+    "timestamp": "2025-06-12T23:33:06.209592",
     "plot_id": "-7.23918_112.55435",
     "latitude": -7.239176,
     "longitude": 112.554352,
@@ -346,7 +261,7 @@
       "level2": 2
     },
     "total_objects": 2,
-    "timestamp": "2025-06-12T14:52:58.255476",
+    "timestamp": "2025-06-12T23:33:13.714914",
     "plot_id": "-7.23914_112.55392",
     "latitude": -7.239144,
     "longitude": 112.553921,
@@ -360,7 +275,7 @@
       "level2": 2
     },
     "total_objects": 2,
-    "timestamp": "2025-06-12T14:53:02.845982",
+    "timestamp": "2025-06-12T23:33:19.668844",
     "plot_id": "-7.23914_112.55389",
     "latitude": -7.239143,
     "longitude": 112.553888,
@@ -374,7 +289,7 @@
       "level2": 4
     },
     "total_objects": 4,
-    "timestamp": "2025-06-12T14:53:07.567619",
+    "timestamp": "2025-06-12T23:33:24.171482",
     "plot_id": "-7.93113_110.22822",
     "latitude": -7.931131,
     "longitude": 110.228217,
@@ -388,7 +303,7 @@
       "level2": 5
     },
     "total_objects": 5,
-    "timestamp": "2025-06-12T14:53:11.026642",
+    "timestamp": "2025-06-12T23:33:27.408987",
     "plot_id": "-7.93114_110.22824",
     "latitude": -7.931138,
     "longitude": 110.228243,
@@ -402,7 +317,7 @@
       "level2": 2
     },
     "total_objects": 2,
-    "timestamp": "2025-06-12T14:53:14.628634",
+    "timestamp": "2025-06-12T23:33:30.579835",
     "plot_id": "-7.93115_110.22827",
     "latitude": -7.931147,
     "longitude": 110.228275,
@@ -416,7 +331,7 @@
       "level2": 2
     },
     "total_objects": 2,
-    "timestamp": "2025-06-12T14:53:18.471256",
+    "timestamp": "2025-06-12T23:33:33.733203",
     "plot_id": "-7.93116_110.22831",
     "latitude": -7.931156,
     "longitude": 110.228311,
@@ -430,7 +345,7 @@
       "level2": 3
     },
     "total_objects": 3,
-    "timestamp": "2025-06-12T14:53:22.012869",
+    "timestamp": "2025-06-12T23:33:36.811235",
     "plot_id": "-7.93116_110.22834",
     "latitude": -7.931163,
     "longitude": 110.228338,
@@ -444,7 +359,7 @@
       "level2": 3
     },
     "total_objects": 3,
-    "timestamp": "2025-06-12T14:53:25.790555",
+    "timestamp": "2025-06-12T23:33:40.626369",
     "plot_id": "-7.93117_110.22837",
     "latitude": -7.931172,
     "longitude": 110.228369,
@@ -458,7 +373,7 @@
       "level2": 2
     },
     "total_objects": 2,
-    "timestamp": "2025-06-12T14:53:29.441135",
+    "timestamp": "2025-06-12T23:33:43.894260",
     "plot_id": "-7.93123_110.22859",
     "latitude": -7.93123,
     "longitude": 110.228589,
@@ -472,7 +387,7 @@
       "level2": 2
     },
     "total_objects": 2,
-    "timestamp": "2025-06-12T14:53:33.301894",
+    "timestamp": "2025-06-12T23:33:48.057779",
     "plot_id": "-7.93124_110.22862",
     "latitude": -7.931239,
     "longitude": 110.22862,
@@ -486,7 +401,7 @@
       "level2": 2
     },
     "total_objects": 2,
-    "timestamp": "2025-06-12T14:53:37.268545",
+    "timestamp": "2025-06-12T23:33:51.636775",
     "plot_id": "-7.93125_110.22865",
     "latitude": -7.931247,
     "longitude": 110.228652,
@@ -501,7 +416,7 @@
       "level2": 3
     },
     "total_objects": 6,
-    "timestamp": "2025-06-12T14:53:41.254703",
+    "timestamp": "2025-06-12T23:33:54.747826",
     "plot_id": "-7.93126_110.22868",
     "latitude": -7.931256,
     "longitude": 110.228683,
@@ -515,7 +430,7 @@
       "level2": 2
     },
     "total_objects": 2,
-    "timestamp": "2025-06-12T14:53:45.137293",
+    "timestamp": "2025-06-12T23:33:57.827891",
     "plot_id": "-7.93126_110.22872",
     "latitude": -7.931265,
     "longitude": 110.228716,
@@ -529,7 +444,7 @@
       "level2": 4
     },
     "total_objects": 4,
-    "timestamp": "2025-06-12T14:53:49.017873",
+    "timestamp": "2025-06-12T23:34:01.056256",
     "plot_id": "-7.93127_110.22875",
     "latitude": -7.931273,
     "longitude": 110.228747,
@@ -544,7 +459,7 @@
       "level3": 1
     },
     "total_objects": 5,
-    "timestamp": "2025-06-12T14:53:52.942786",
+    "timestamp": "2025-06-12T23:34:04.214862",
     "plot_id": "-7.93134_110.229",
     "latitude": -7.931339,
     "longitude": 110.228998,
@@ -558,7 +473,7 @@
       "level2": 6
     },
     "total_objects": 6,
-    "timestamp": "2025-06-12T14:53:57.087098",
+    "timestamp": "2025-06-12T23:34:07.911773",
     "plot_id": "-7.93135_110.22903",
     "latitude": -7.931348,
     "longitude": 110.229031,
@@ -572,7 +487,7 @@
       "level2": 5
     },
     "total_objects": 5,
-    "timestamp": "2025-06-12T14:54:01.067475",
+    "timestamp": "2025-06-12T23:34:11.092136",
     "plot_id": "-7.93136_110.22906",
     "latitude": -7.931356,
     "longitude": 110.229063,
@@ -586,7 +501,7 @@
       "level2": 3
     },
     "total_objects": 3,
-    "timestamp": "2025-06-12T14:54:05.226176",
+    "timestamp": "2025-06-12T23:34:14.190551",
     "plot_id": "-7.93136_110.22909",
     "latitude": -7.931364,
     "longitude": 110.229093,
@@ -600,7 +515,7 @@
       "level2": 2
     },
     "total_objects": 2,
-    "timestamp": "2025-06-12T14:54:09.004868",
+    "timestamp": "2025-06-12T23:34:17.377232",
     "plot_id": "-7.93137_110.22913",
     "latitude": -7.931373,
     "longitude": 110.229127,
@@ -611,11 +526,12 @@
   {
     "filename": "DJI_20250611120707_0001_D.JPG",
     "detections": {
-      "level2": 2,
-      "level5": 1
+      "level5": 1,
+      "level4": 1,
+      "level2": 1
     },
     "total_objects": 3,
-    "timestamp": "2025-06-12T14:54:12.649887",
+    "timestamp": "2025-06-12T23:34:20.536383",
     "plot_id": "-7.40611_112.68962",
     "latitude": -7.406114,
     "longitude": 112.689616,
@@ -629,7 +545,7 @@
       "level2": 3
     },
     "total_objects": 3,
-    "timestamp": "2025-06-12T14:54:13.901086",
+    "timestamp": "2025-06-12T23:34:22.175821",
     "plot_id": "-7.40606_112.68963",
     "latitude": -7.406056,
     "longitude": 112.689625,
@@ -643,7 +559,7 @@
       "level2": 6
     },
     "total_objects": 6,
-    "timestamp": "2025-06-12T14:54:15.652110",
+    "timestamp": "2025-06-12T23:34:23.883169",
     "plot_id": "-7.40599_112.68963",
     "latitude": -7.405992,
     "longitude": 112.689633,
@@ -657,7 +573,7 @@
       "level2": 2
     },
     "total_objects": 2,
-    "timestamp": "2025-06-12T14:54:17.693972",
+    "timestamp": "2025-06-12T23:34:25.931103",
     "plot_id": "-7.40596_112.68964",
     "latitude": -7.40596,
     "longitude": 112.689638,
@@ -672,7 +588,7 @@
       "level3": 1
     },
     "total_objects": 5,
-    "timestamp": "2025-06-12T14:54:19.384281",
+    "timestamp": "2025-06-12T23:34:27.862039",
     "plot_id": "-7.4055_112.68977",
     "latitude": -7.405502,
     "longitude": 112.689768,
@@ -686,7 +602,7 @@
       "level2": 3
     },
     "total_objects": 3,
-    "timestamp": "2025-06-12T14:54:22.160803",
+    "timestamp": "2025-06-12T23:34:30.997428",
     "plot_id": "-7.40554_112.68976",
     "latitude": -7.405535,
     "longitude": 112.689763,
@@ -700,7 +616,7 @@
       "level2": 4
     },
     "total_objects": 4,
-    "timestamp": "2025-06-12T14:54:25.288056",
+    "timestamp": "2025-06-12T23:34:33.970787",
     "plot_id": "-7.40557_112.68976",
     "latitude": -7.405567,
     "longitude": 112.689759,
@@ -714,7 +630,7 @@
       "level2": 4
     },
     "total_objects": 4,
-    "timestamp": "2025-06-12T14:54:28.132415",
+    "timestamp": "2025-06-12T23:34:36.881963",
     "plot_id": "-7.4056_112.68975",
     "latitude": -7.4056,
     "longitude": 112.689754,
@@ -728,7 +644,7 @@
       "level2": 3
     },
     "total_objects": 3,
-    "timestamp": "2025-06-12T14:54:31.111684",
+    "timestamp": "2025-06-12T23:34:39.839196",
     "plot_id": "-7.40563_112.68975",
     "latitude": -7.405632,
     "longitude": 112.689749,
@@ -739,10 +655,10 @@
   {
     "filename": "DJI_20250611120847_0051_D.JPG",
     "detections": {
-      "level2": 2
+      "level3": 1
     },
-    "total_objects": 2,
-    "timestamp": "2025-06-12T14:54:33.894969",
+    "total_objects": 1,
+    "timestamp": "2025-06-12T23:34:43.446355",
     "plot_id": "-7.40566_112.68975",
     "latitude": -7.405664,
     "longitude": 112.689745,
@@ -752,9 +668,12 @@
   },
   {
     "filename": "DJI_20250611120849_0052_D.JPG",
-    "detections": {},
-    "total_objects": 0,
-    "timestamp": "2025-06-12T14:54:34.435049",
+    "detections": {
+      "level3": 1,
+      "level2": 1
+    },
+    "total_objects": 2,
+    "timestamp": "2025-06-12T23:34:44.094331",
     "plot_id": "-7.40569_112.68974",
     "latitude": -7.405695,
     "longitude": 112.689741,
@@ -768,7 +687,7 @@
       "level2": 2
     },
     "total_objects": 2,
-    "timestamp": "2025-06-12T14:54:35.175977",
+    "timestamp": "2025-06-12T23:34:44.554057",
     "plot_id": "-7.40573_112.68974",
     "latitude": -7.405728,
     "longitude": 112.689736,
@@ -782,7 +701,7 @@
       "level2": 2
     },
     "total_objects": 2,
-    "timestamp": "2025-06-12T14:54:35.658812",
+    "timestamp": "2025-06-12T23:34:45.166299",
     "plot_id": "-7.40576_112.68973",
     "latitude": -7.405758,
     "longitude": 112.689732,
@@ -796,7 +715,7 @@
       "level2": 2
     },
     "total_objects": 2,
-    "timestamp": "2025-06-12T14:54:38.414380",
+    "timestamp": "2025-06-12T23:34:48.183451",
     "plot_id": "-7.40579_112.68973",
     "latitude": -7.405791,
     "longitude": 112.689727,
@@ -810,7 +729,7 @@
       "level2": 2
     },
     "total_objects": 2,
-    "timestamp": "2025-06-12T14:54:41.177041",
+    "timestamp": "2025-06-12T23:34:50.998767",
     "plot_id": "-7.40582_112.68972",
     "latitude": -7.405822,
     "longitude": 112.689723,
@@ -824,7 +743,7 @@
       "level2": 2
     },
     "total_objects": 2,
-    "timestamp": "2025-06-12T14:54:43.926685",
+    "timestamp": "2025-06-12T23:34:54.136739",
     "plot_id": "-7.40586_112.68972",
     "latitude": -7.405856,
     "longitude": 112.689718,
@@ -838,7 +757,7 @@
       "level2": 2
     },
     "total_objects": 2,
-    "timestamp": "2025-06-12T14:54:46.576819",
+    "timestamp": "2025-06-12T23:34:56.916248",
     "plot_id": "-7.40589_112.68971",
     "latitude": -7.405888,
     "longitude": 112.689714,
@@ -852,7 +771,7 @@
       "level2": 2
     },
     "total_objects": 2,
-    "timestamp": "2025-06-12T14:54:49.246063",
+    "timestamp": "2025-06-12T23:34:59.964224",
     "plot_id": "-7.40592_112.68971",
     "latitude": -7.40592,
     "longitude": 112.689709,
@@ -866,7 +785,7 @@
       "level2": 3
     },
     "total_objects": 3,
-    "timestamp": "2025-06-12T14:54:51.926897",
+    "timestamp": "2025-06-12T23:35:03.090084",
     "plot_id": "-7.40595_112.68971",
     "latitude": -7.405952,
     "longitude": 112.689705,
@@ -880,7 +799,7 @@
       "level2": 4
     },
     "total_objects": 4,
-    "timestamp": "2025-06-12T14:54:54.579388",
+    "timestamp": "2025-06-12T23:35:06.085229",
     "plot_id": "-7.40598_112.6897",
     "latitude": -7.405984,
     "longitude": 112.689701,
@@ -894,7 +813,7 @@
       "level2": 2
     },
     "total_objects": 2,
-    "timestamp": "2025-06-12T14:54:57.190447",
+    "timestamp": "2025-06-12T23:35:08.961708",
     "plot_id": "-7.40605_112.68969",
     "latitude": -7.406048,
     "longitude": 112.689691,
