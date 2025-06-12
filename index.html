@@ -640,37 +640,36 @@
                     
                     // Process each detection
                     data.forEach((item, index) => {
-                        if (!item.latitude || !item.longitude) return;
-                        
-                        // Add to history
-                        historyList.appendChild(createHistoryItem(item, index));
-                        
-                        const markerKey = `${item.latitude},${item.longitude}`;
-                        // Create or update marker (no popup)
-                        if (!markers[markerKey]) {
-                            markers[markerKey] = L.circleMarker(
-                                [item.latitude, item.longitude],
-                                {
-                                    radius: 8,
-                                    fillColor: getColorForDetections(item.detections),
-                                    color: '#000',
-                                    weight: 1,
-                                    opacity: 1,
-                                    fillOpacity: 0.8
-                                }
-                            ).addTo(markersLayer);
+                        // Only show marker if there is at least one detection and has lat/lon
+                        if (
+                            item.latitude &&
+                            item.longitude &&
+                            item.detections &&
+                            Object.keys(item.detections).length > 0
+                        ) {
+                            const markerKey = `${item.latitude},${item.longitude}`;
+                            if (!markers[markerKey]) {
+                                markers[markerKey] = L.circleMarker(
+                                    [item.latitude, item.longitude],
+                                    {
+                                        radius: 8,
+                                        fillColor: getColorForDetections(item.detections),
+                                        color: '#000',
+                                        weight: 1,
+                                        opacity: 1,
+                                        fillOpacity: 0.8
+                                    }
+                                ).addTo(markersLayer);
 
-                            // Remove popup binding:
-                            // markers[markerKey].bindPopup(popupContent);
-
-                            // Click event for info panel only
-                            markers[markerKey].on('click', function() {
-                                // Zoom in to the marker
-                                map.setView([item.latitude, item.longitude], 18, { animate: true });
-                                // Update info panel
-                                document.getElementById('info-panel').innerHTML = createPopupContent(item, window.allDetectionsData, true);
-                            });
+                                markers[markerKey].on('click', function() {
+                                    map.setView([item.latitude, item.longitude], 18, { animate: true });
+                                    document.getElementById('info-panel').innerHTML = createPopupContent(item, window.allDetectionsData, true);
+                                });
+                            }
                         }
+
+                        // Always add to history, regardless of detection
+                        historyList.appendChild(createHistoryItem(item, index));
                     });
                     
                     // Set view to first item if available
