@@ -4,35 +4,119 @@
     <title>Drone Data Viewer with History</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <style>
-        body { margin: 0; padding: 0; font-family: Arial, sans-serif; }
-        #map { height: 70vh; width: 100vw; }
-        #history-panel { 
-            height: 30vh; 
-            overflow-y: auto; 
-            padding: 10px;
-            background: #f5f5f5;
-            border-top: 1px solid #ddd;
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            overflow: hidden;
         }
-        .info-panel {
+        #map {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 1;
+        }
+        .side-panel {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 420px;
+            height: 100vh;
+            background: white;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            box-shadow: -2px 0 15px rgba(0,0,0,0.12);
+        }
+        .side-panel-content {
+            flex: 1 1 auto;
+            overflow-y: auto;
+            padding: 18px 18px 0 18px;
+        }
+        #left-panel {
             position: absolute;
             top: 10px;
-            right: 10px;
-            z-index: 1000;
+            left: 10px;
+            width: 340px; /* match history panel width */
+            z-index: 1100;
+            display: flex;
+            flex-direction: column;
+        }
+        .left-panel-box {
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.10);
+            padding: 18px 16px 16px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-bottom: 0; /* Remove gap below the box */
+        }
+        .layer-control {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 8px;
+        }
+        .layer-btn {
+            padding: 5px 10px;
+            cursor: pointer;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            font-size: 14px;
             background: white;
-            padding: 15px;
-            border-radius: 5px;
-            box-shadow: 0 0 15px rgba(0,0,0,0.2);
-            max-width: 300px;
-            max-height: 70vh;
+        }
+        .layer-btn.active {
+            background-color: #0078A8;
+            color: white;
+            border-color: #0078A8;
+        }
+        .refresh-btn {
+            display: block;
+            width: 100%;
+            padding: 7px 0;
+            background: #f0f0f0;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 15px;
+            margin-bottom: 8px;
+        }
+        .refresh-btn:hover {
+            background: #e0e0e0;
+        }
+        .info-panel {
+            background: none;
+            box-shadow: none;
+            padding: 0;
+            max-width: none;
+            max-height: none;
+            overflow: visible;
+        }
+        #history-panel {
+            position: absolute;
+            left: 10px;
+            bottom: 10px;
+            width: 340px; /* match left-panel */
+            z-index: 1000;
+            height: 260px;
             overflow-y: auto;
+            background: #f5f5f5;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            padding: 8px 8px 8px 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.12);
         }
         .history-item {
-            padding: 10px;
-            margin: 5px 0;
+            padding: 6px;
+            margin: 3px 0;
             background: white;
             border-radius: 4px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
             cursor: pointer;
+            font-size: 0.95em;
         }
         .history-item:hover {
             background: #f0f0f0;
@@ -41,225 +125,101 @@
             border-left: 4px solid #0078A8;
             background: #e6f7ff;
         }
-        .detection-item {
-            margin: 8px 0;
-            padding: 5px;
-            border-left: 4px solid;
+        /* Image zoom modal */
+        .img-zoom-modal {
+            display: none;
+            position: fixed;
+            z-index: 3000;
+            left: 0; top: 0; width: 100vw; height: 100vh;
+            background: rgba(0,0,0,0.7);
+            align-items: center;
+            justify-content: center;
         }
-        .level2 { border-color: orange; color: orange; }
-        .level3 { border-color: green; color: green; }
-        .level4 { border-color: blue; color: blue; }
-        .level5 { border-color: red; color: red; }
-        .map-legend {
+        .img-zoom-modal img {
+            max-width: 90vw;
+            max-height: 90vh;
+            border-radius: 10px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.25);
+        }
+        .img-zoom-modal .close {
             position: absolute;
-            bottom: 30vh;
-            left: 10px;      /* Move to the left */
-            z-index: 1000;
-            background: white;
-            padding: 10px;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.2);
-            font-size: 14px;
-        }
-        .history-header {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 5px;
+            top: 30px;
+            right: 40px;
+            color: #fff;
+            font-size: 40px;
             font-weight: bold;
-        }
-        .history-time {
-            font-size: 0.85em;
-            color: #555;
-            font-family: monospace;
-        }
-        .history-summary {
-            font-size: 0.85em;
-            color: #666;
-        }
-        .layer-control {
-            position: absolute;
-            top: 10px;
-            left: 50px;
-            z-index: 1000;
-            background: white;
-            padding: 5px;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.2);
-        }
-        .layer-btn {
-            padding: 5px 10px;
-            margin: 2px;
             cursor: pointer;
-            border: 1px solid #ddd;
-            border-radius: 3px;
-            font-size: 14px;
-        }
-        .layer-btn.active {
-            background-color: #0078A8;
-            color: white;
-            border-color: #0078A8;
+            z-index: 3100;
         }
         .legend-item {
             display: flex;
             align-items: center;
-            margin: 5px 0;
+            margin-bottom: 6px;
+            font-size: 15px;
         }
         .legend-color {
-            width: 20px;
-            height: 20px;
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
             margin-right: 8px;
-            border: 1px solid #333;
-            border-radius: 3px;
+            border: 1.5px solid #888;
+            box-sizing: border-box;
         }
-        .solution-panel {
-            margin-top: 15px;
-            padding: 10px;
-            background-color: #f8f9fa;
-            border-radius: 5px;
-            border-left: 4px solid #0078A8;
-        }
-        .solution-panel.solution-good {
-            border-left: 5px solid #28a745;
-            background: #eafaf1;
-        }
-        .solution-panel.solution-warning {
-            border-left: 5px solid #ffc107;
-            background: #fffbe6;
-        }
-        .solution-panel.solution-severe {
-            border-left: 5px solid #dc3545;
-            background: #fdeaea;
-        }
-        .solution-title {
-            font-weight: bold;
-            margin-bottom: 5px;
-            font-size: 1.1em;
+        .detection-summary-box {
             display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .solution-content {
-            font-size: 0.97em;
-            color: #333;
-        }
-        .refresh-btn {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            z-index: 1000;
-            padding: 5px 10px;
-            background: white;
-            border: 1px solid #ddd;
-            border-radius: 3px;
-            cursor: pointer;
-            font-size: 14px;
-        }
-        .refresh-btn:hover {
-            background: #f0f0f0;
-        }
-        .leaflet-popup-content-wrapper {
-            max-width: 400px !important;
-            width: 400px !important;
-        }
-        .leaflet-popup-content {
-            max-height: 400px;
-            overflow-y: auto;
-            font-size: 1em;
-        }
-        .solution-good {
-            border-left-color: green !important;
-        }
-        .solution-warning {
-            border-left-color: orange !important;
-        }
-        .solution-severe {
-            border-left-color: red !important;
-        }
-        .solution-none {
-            border-left-color: gray !important;
-        }
-        .trend-panel {
-            margin-top: 10px;
-            padding: 8px;
-            background: #f4f6fa;
-            border-radius: 4px;
-            font-size: 0.95em;
-        }
-        /* Modal styles */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 2000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgb(0,0,0);
-            background-color: rgba(0,0,0,0.4);
-            padding-top: 60px;
-        }
-
-        .modal-content {
-            background-color: #fefefe;
-            margin: 5% auto;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 80%;
-            max-width: 500px;
-            border-radius: 8px;
-        }
-
-        .close {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
+            align-items: flex-start;
+            margin-bottom: 8px;
+            border-radius: 7px;
+            padding: 8px 12px 8px 0;
+            background: #f8f8f8;
             font-weight: bold;
+            font-size: 1em;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+            border-left: 6px solid #bbb;
         }
-
-        .close:hover,
-        .close:focus {
-            color: black;
-            text-decoration: none;
-            cursor: pointer;
-        }
+        .detection-summary-box.level2 { background: #fff4e5; border-left-color: orange; color: #b26a00; }
+        .detection-summary-box.level3 { background: #eafbe7; border-left-color: green; color: #217a36; }
+        .detection-summary-box.level4 { background: #e7f1fb; border-left-color: #0078A8; color: #005080; }
+        .detection-summary-box.level5 { background: #fde7e7; border-left-color: red; color: #a80000; }
     </style>
 </head>
 <body>
-    <button class="refresh-btn" id="refresh-btn">Refresh Data</button>
     <div id="map"></div>
-    <div class="info-panel" id="info-panel">
-        <h3>Drone Data Viewer</h3>
-        <p>Click on any marker to view details</p>
+    <div id="left-panel">
+    <div class="left-panel-box">
+        <div class="layer-control">
+            <button class="layer-btn active" id="street-btn">Street Map</button>
+            <button class="layer-btn" id="satellite-btn">Satellite</button>
+            <button class="layer-btn" id="hybrid-btn">Hybrid</button>
+            <button class="layer-btn" id="webodm-btn">WebODM</button>
+        </div>
+        <button class="refresh-btn" id="refresh-btn">Refresh Data</button>
+        <div class="legend-panel" id="legend-panel">
+            <b>Legend</b>
+            <div class="legend-item"><span class="legend-color" style="background:orange"></span>Low Health</div>
+            <div class="legend-item"><span class="legend-color" style="background:green"></span>Medium Health</div>
+            <div class="legend-item"><span class="legend-color" style="background:blue"></span>High Health</div>
+            <div class="legend-item"><span class="legend-color" style="background:red"></span>Healthiest</div>
+        </div>
     </div>
-    <div class="layer-control">
-        <button class="layer-btn active" id="street-btn">Street Map</button>
-        <button class="layer-btn" id="satellite-btn">Satellite</button>
-        <button class="layer-btn" id="hybrid-btn">Hybrid</button>
-        <button class="layer-btn" id="webodm-btn">WebODM</button>
-    </div>
-    <div class="map-legend">
-        <h4>Health Level Legend</h4>
-        <div class="legend-item">
-            <div class="legend-color" style="background-color: red;"></div>
-            <span>Level 5 - Healthiest</span>
-        </div>
-        <div class="legend-item">
-            <div class="legend-color" style="background-color: blue;"></div>
-            <span>Level 4 - High Health</span>
-        </div>
-        <div class="legend-item">
-            <div class="legend-color" style="background-color: green;"></div>
-            <span>Level 3 - Medium Health</span>
-        </div>
-        <div class="legend-item">
-            <div class="legend-color" style="background-color: orange;"></div>
-            <span>Level 2 - Low Health</span>
+</div>
+    <div class="side-panel">
+        <div class="side-panel-content">
+            <div class="info-panel" id="info-panel">
+                <h3>Drone Data Viewer</h3>
+                <p>Click on any marker or history item to view details</p>
+            </div>
         </div>
     </div>
     <div id="history-panel">
-        <h3>Detection History</h3>
+        <h3 style="font-size:1.1em;">Detection History</h3>
         <div id="history-list"></div>
+    </div>
+    <!-- Image Zoom Modal -->
+    <div class="img-zoom-modal" id="img-zoom-modal">
+        <span class="close" id="img-zoom-close">&times;</span>
+        <img id="img-zoom-modal-img" src="" alt="Zoomed Image">
     </div>
 
     <!-- Modal for WebODM info -->
@@ -291,10 +251,11 @@
     </div>
 
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         // Initialize map
         const map = L.map('map').setView([0, 0], 2);
-        
+
         // Define base layers
         const baseLayers = {
             "Street Map": L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -310,7 +271,7 @@
                 maxZoom: 19
             })
         };
-        
+
         // Add default layer
         baseLayers["Street Map"].addTo(map);
 
@@ -401,9 +362,45 @@
             }
         }
 
-        // Function to create popup content
+        // Function to create popup content (now only for info panel)
         function createPopupContent(item, allData, showTrend = true) {
             let content = `<b>${item.filename || 'Unknown'}</b><br>`;
+
+            // Add rebuilt image if available, make it clickable for zoom
+            if (item.filename) {
+                const imgSrc = `rebuilt/${item.filename}`;
+                content += `<img src="${imgSrc}" alt="Rebuilt" class="zoomable-img" style="width:100%;max-width:260px;display:block;margin:8px 0;border-radius:6px;box-shadow:0 2px 8px rgba(0,0,0,0.08);cursor:zoom-in;">`;
+            }
+
+            // Add the web map iframe
+            content += `
+    <div style="margin:14px 0; max-width:100%; overflow:auto;">
+        <iframe 
+            src="http://tanipintar.com:8000/public/project/26e3dcf8-4ba8-4c8d-950a-7c2fe5c1d771/map/?t=orthophoto" 
+            width="520" 
+            height="520" 
+            style="border:2px solid #0078A8; border-radius:10px; display:block; margin:auto; background:#f8f8f8;"
+            allowfullscreen
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+        ></iframe>
+        <div style="margin-top:10px; background:#f4f6fa; border-radius:6px; padding:10px 12px; font-size:1em;">
+            <b>Tutorial Navigasi WebODM:</b>
+            <ol style="margin:8px 0 0 18px; padding:0;">
+                <li>Klik <b>ikon menu layer</b> <span style="display:inline-block;vertical-align:middle;">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="#333" viewBox="0 0 16 16" style="vertical-align:middle;">
+                    <path d="M8.211 1.146a1 1 0 0 0-.422 0l-6 1.5A1 1 0 0 0 1 3.5v.634a1 1 0 0 0 .553.894l6 3a1 1 0 0 0 .894 0l6-3A1 1 0 0 0 15 4.134V3.5a1 1 0 0 0-.789-.976l-6-1.5z"/>
+                    <path d="M15 6.634a1 1 0 0 0-.447-.894l-6-3a1 1 0 0 0-.894 0l-6 3A1 1 0 0 0 1 6.634v.634a1 1 0 0 0 .553.894l6 3a1 1 0 0 0 .894 0l6-3A1 1 0 0 0 15 7.268v-.634z"/>
+                    <path d="M15 9.134a1 1 0 0 0-.447-.894l-6-3a1 1 0 0 0-.894 0l-6 3A1 1 0 0 0 1 9.134v.634a1 1 0 0 0 .553.894l6 3a1 1 0 0 0 .894 0l6-3A1 1 0 0 0 15 9.768v-.634z"/>
+                  </svg>
+                </span> di kanan atas.</li>
+                <li>Pilih layer sawah Anda dari daftar.</li>
+                <li>Gunakan fitur zoom dan pan untuk menjelajah peta.</li>
+                <li>Jika ingin tampilan lebih besar, klik kanan dan pilih "Open in new tab".</li>
+            </ol>
+        </div>
+    </div>
+`;
 
             // Timestamp display
             let timestampDisplay = '';
@@ -426,7 +423,15 @@
                 content += '<b>Detections:</b><br>';
                 for (const [level, count] of Object.entries(item.detections)) {
                     const healthStatus = translateLevel(level);
-                    content += `<div class="detection-item ${level}">${healthStatus}: ${count}</div>`;
+                    let icon = '';
+                    if (level === 'level2') icon = '&#9888;&#65039;'; // ⚠️
+                    else if (level === 'level3') icon = '&#9888;&#65039;'; // ⚠️
+                    else if (level === 'level4') icon = '&#x2705;'; // ✅
+                    else if (level === 'level5') icon = '&#x2705;'; // ✅
+                    content += `<div class="detection-summary-box ${level}">
+        <span style="margin-right:8px;">${icon}</span>
+        <span>${healthStatus}: ${count}</span>
+    </div>`;
                 }
                 content += `<br><b>Total:</b> ${item.total_objects || Object.values(item.detections).reduce((a, b) => a + b, 0)}`;
             } else {
@@ -470,10 +475,19 @@
                 solutionIcon = "";
             }
             if (avgLevel) {
+                // Map solutionClass to detection-summary-box color classes
+                let boxClass = '';
+                if (solutionClass === 'solution-severe') boxClass = 'level2';
+                else if (solutionClass === 'solution-warning') boxClass = 'level3';
+                else if (solutionClass === 'solution-good') boxClass = 'level4';
+                else boxClass = '';
                 content += `
-                    <div class="solution-panel ${solutionClass}">
-                        <div class="solution-title">${solutionIcon} ${solutionTitle}</div>
-                        <div class="solution-content">${solutionText}</div>
+                    <div class="detection-summary-box ${boxClass}" style="margin-top:12px;">
+                        <span style="margin-right:10px;font-size:1.3em;">${solutionIcon}</span>
+                        <div>
+                            <div style="font-size:1.13em; font-weight:bold; margin-bottom:2px;">${solutionTitle}</div>
+                            <div style="font-weight:normal;">${solutionText}</div>
+                        </div>
                     </div>
                 `;
             }
@@ -596,21 +610,10 @@
                 // Center map on this item
                 if (item.latitude && item.longitude) {
                     map.setView([item.latitude, item.longitude], 16);
-                    
-                    // Highlight the corresponding marker
-                    const markerKey = `${item.latitude},${item.longitude}`;
-                    if (markers[markerKey]) {
-                        if (currentActiveMarker) {
-                            currentActiveMarker.setStyle({color: '#000', weight: 1});
-                        }
-                        markers[markerKey].setStyle({color: '#ff00ff', weight: 3});
-                        markers[markerKey].openPopup();
-                        currentActiveMarker = markers[markerKey];
-                    }
                 }
                 
-                // Update info panel
-                document.getElementById('info-panel').innerHTML = createPopupContent(item, window.allDetectionsData, false);
+                // Update info panel (no popup)
+                document.getElementById('info-panel').innerHTML = createPopupContent(item, window.allDetectionsData, true);
             });
             
             return historyItem;
@@ -643,9 +646,7 @@
                         historyList.appendChild(createHistoryItem(item, index));
                         
                         const markerKey = `${item.latitude},${item.longitude}`;
-                        const popupContent = createPopupContent(item, window.allDetectionsData);
-                        
-                        // Create or update marker
+                        // Create or update marker (no popup)
                         if (!markers[markerKey]) {
                             markers[markerKey] = L.circleMarker(
                                 [item.latitude, item.longitude],
@@ -658,15 +659,16 @@
                                     fillOpacity: 0.8
                                 }
                             ).addTo(markersLayer);
-                            
-                            markers[markerKey].bindPopup(popupContent);
-                            
-                            // Click event for info panel
+
+                            // Remove popup binding:
+                            // markers[markerKey].bindPopup(popupContent);
+
+                            // Click event for info panel only
                             markers[markerKey].on('click', function() {
-                                const refreshedContent = createPopupContent(item, window.allDetectionsData); // popup with trend
-                                markers[markerKey].setPopupContent(refreshedContent);
-                                // Info panel without trend
-                                document.getElementById('info-panel').innerHTML = createPopupContent(item, window.allDetectionsData, false);
+                                // Zoom in to the marker
+                                map.setView([item.latitude, item.longitude], 18, { animate: true });
+                                // Update info panel
+                                document.getElementById('info-panel').innerHTML = createPopupContent(item, window.allDetectionsData, true);
                             });
                         }
                     });
@@ -767,7 +769,7 @@
             const trend = allData
                 .filter(e =>
                     e.latitude && e.longitude &&
-                    isNearby(item.latitude, item.longitude, e.latitude, e.longitude, 30.9)
+                    isNearby(item.latitude, item.longitude, e.latitude, e.longitude, 3000.9)
                 )
                 .sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
             return trend.map(e => {
@@ -812,8 +814,23 @@
             const trend = getHistoricalTrend(item, allData, item.timestamp);
             console.log('Trend for this marker:', trend);
         }
+
+        // Image zoom logic
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('zoomable-img')) {
+                const modal = document.getElementById('img-zoom-modal');
+                const modalImg = document.getElementById('img-zoom-modal-img');
+                modalImg.src = e.target.src;
+                modal.style.display = 'flex';
+            }
+        });
+        document.getElementById('img-zoom-close').onclick = function() {
+            document.getElementById('img-zoom-modal').style.display = 'none';
+        };
+        document.getElementById('img-zoom-modal').onclick = function(e) {
+            if (e.target === this) this.style.display = 'none';
+        };
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="#333" viewBox="0 0 16 16" style="vertical-align:middle;">
       <path d="M8.211 1.146a1 1 0 0 0-.422 0l-6 1.5A1 1 0 0 0 1 3.5v.634a1 1 0 0 0 .553.894l6 3a1 1 0 0 0 .894 0l6-3A1 1 0 0 0 15 4.134V3.5a1 1 0 0 0-.789-.976l-6-1.5z"/>
       <path d="M15 6.634a1 1 0 0 0-.447-.894l-6-3a1 1 0 0 0-.894 0l-6 3A1 1 0 0 0 1 6.634v.634a1 1 0 0 0 .553.894l6 3a1 1 0 0 0 .894 0l6-3A1 1 0 0 0 15 7.268v-.634z"/>
