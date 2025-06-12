@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Drone Data Viewer with History</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <style>
+        body { margin: 0; padding: 0; font-family: Arial, sans-serif; }
+        #map { height: 70vh; width: 100vw; }
+        #history-panel { 
+            height: 30vh; 
+            overflow-y: auto; 
+            padding: 10px;
+            background: #f5f5f5;
+            border-top: 1px solid #ddd;
+        }
+        .info-panel {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 1000;
+            background: white;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.2);
+            max-width: 300px;
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+        .history-item {
+            padding: 10px;
+            margin: 5px 0;
+            background: white;
+            border-radius: 4px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            cursor: pointer;
+        }
+        .history-item:hover {
+            background: #f0f0f0;
+        }
+        .history-item.active {
+            border-left: 4px solid #0078A8;
+            background: #e6f7ff;
+        }
+        .detection-item {
+            margin: 8px 0;
+            padding: 5px;
+            border-left: 4px solid;
+        }
+        .level2 { border-color: orange; color: orange; }
+        .level3 { border-color: green; color: green; }
+        .level4 { border-color: blue; color: blue; }
+        .level5 { border-color: red; color: red; }
+        .map-legend {
+            position: absolute;
+            bottom: 30vh;
+            left: 10px;      /* Move to the left */
+            z-index: 1000;
+            background: white;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.2);
+            font-size: 14px;
+        }
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .history-time {
+            font-size: 0.85em;
+            color: #555;
+            font-family: monospace;
+        }
+        .history-summary {
+            font-size: 0.85em;
+            color: #666;
+        }
+        .layer-control {
+            position: absolute;
+            top: 10px;
+            left: 50px;
+            z-index: 1000;
+            background: white;
+            padding: 5px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.2);
+        }
+        .layer-btn {
+            padding: 5px 10px;
+            margin: 2px;
+            cursor: pointer;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            font-size: 14px;
+        }
+        .layer-btn.active {
+            background-color: #0078A8;
+            color: white;
+            border-color: #0078A8;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin: 5px 0;
+        }
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            margin-right: 8px;
+            border: 1px solid #333;
+            border-radius: 3px;
+        }
+        .solution-panel {
+            margin-top: 15px;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            border-left: 4px solid #0078A8;
+        }
+        .solution-panel.solution-good {
+            border-left: 5px solid #28a745;
+            background: #eafaf1;
+        }
+        .solution-panel.solution-warning {
+            border-left: 5px solid #ffc107;
+            background: #fffbe6;
+        }
+        .solution-panel.solution-severe {
+            border-left: 5px solid #dc3545;
+            background: #fdeaea;
+        }
+        .solution-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+            font-size: 1.1em;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .solution-content {
+            font-size: 0.97em;
+            color: #333;
+        }
+        .refresh-btn {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 1000;
+            padding: 5px 10px;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .refresh-btn:hover {
+            background: #f0f0f0;
+        }
+        .leaflet-popup-content-wrapper {
+            max-width: 400px !important;
+            width: 400px !important;
+        }
+        .leaflet-popup-content {
+            max-height: 400px;
+            overflow-y: auto;
+            font-size: 1em;
+        }
+        .solution-good {
+            border-left-color: green !important;
+        }
+        .solution-warning {
+            border-left-color: orange !important;
+        }
+        .solution-severe {
+            border-left-color: red !important;
+        }
+        .solution-none {
+            border-left-color: gray !important;
+        }
+        .trend-panel {
+            margin-top: 10px;
+            padding: 8px;
+            background: #f4f6fa;
+            border-radius: 4px;
+            font-size: 0.95em;
+        }
+    </style>
+</head>
+<body>
+    <button class="refresh-btn" id="refresh-btn">Refresh Data</button>
+    <div id="map"></div>
+    <div class="info-panel" id="info-panel">
+        <h3>Drone Data Viewer</h3>
+        <p>Click on any marker to view details</p>
+    </div>
+    <div class="layer-control">
+        <button class="layer-btn active" id="street-btn">Street Map</button>
+        <button class="layer-btn" id="satellite-btn">Satellite</button>
+        <button class="layer-btn" id="hybrid-btn">Hybrid</button>
+    </div>
+    <div class="map-legend">
+        <h4>Health Level Legend</h4>
+        <div class="legend-item">
+            <div class="legend-color" style="background-color: red;"></div>
+            <span>Level 5 - Healthiest</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-color" style="background-color: blue;"></div>
+            <span>Level 4 - High Health</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-color" style="background-color: green;"></div>
+            <span>Level 3 - Medium Health</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-color" style="background-color: orange;"></div>
+            <span>Level 2 - Low Health</span>
+        </div>
+    </div>
+    <div id="history-panel">
+        <h3>Detection History</h3>
+        <div id="history-list"></div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script>
+        // Initialize map
+        const map = L.map('map').setView([0, 0], 2);
+        
+        // Define base layers
+        const baseLayers = {
+            "Street Map": L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+                maxZoom: 19
+            }),
+            "Satellite": L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+                attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
+                maxZoom: 19
+            }),
+            "Hybrid": L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+                attribution: 'Tiles &copy; Esri &mdash; Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
+                maxZoom: 19
+            })
+        };
+        
+        // Add default layer
+        baseLayers["Street Map"].addTo(map);
+
+        // Store markers and layer group
+        const markers = {};
+        const markersLayer = L.layerGroup().addTo(map);
+        let currentActiveMarker = null;
+        let currentActiveHistoryItem = null;
+
+        // Function to translate level to health status
+        function translateLevel(level) {
+            const translations = {
+                'level5': 'Healthiest',
+                'level4': 'High Health',
+                'level3': 'Medium Health',
+                'level2': 'Low Health'
+            };
+            return translations[level] || level;
+        }
+
+        // Function to calculate average health level
+        function calculateAverageLevel(detections) {
+            if (!detections) return null;
+            
+            let total = 0;
+            let count = 0;
+            
+            // Convert level names to numerical values
+            const levelValues = {
+                'level2': 2,
+                'level3': 3,
+                'level4': 4,
+                'level5': 5
+            };
+            
+            for (const [level, levelCount] of Object.entries(detections)) {
+                if (levelValues[level]) {
+                    total += levelValues[level] * levelCount;
+                    count += levelCount;
+                }
+            }
+            
+            if (count === 0) return null;
+            return total / count;
+        }
+
+        // Function to get solution based on average level
+        function getSolutionRecommendation(avgLevel) {
+            if (!avgLevel) return {
+                title: "No data",
+                content: "No health data available for recommendations."
+            };
+
+            if (avgLevel >= 4.5) {
+                return {
+                    title: "Healthiest (Level 5)",
+                    content: "No action required."
+                };
+            } else if (avgLevel >= 3.5) {
+                return {
+                    title: "Healthy (Level 4)",
+                    content: "No action required."
+                };
+            } else if (avgLevel >= 2.5) {
+                return {
+                    title: "Medium Health (Level 3)",
+                    content: "Monitor further with pH meter and water flow meter. Check nitrogen level and add efficient amount of fertilizer."
+                };
+            } else {
+                return {
+                    title: "Low Health (Level 2)",
+                    content: "Immediately put a fertilizer and check if the plot has a pest or is lacking in nitrogen level."
+                };
+            }
+        }
+
+        // Improved function to format date/time with both date and time
+        function formatDateTime(timestamp) {
+            if (!timestamp) return 'Unknown time';
+            try {
+                const date = new Date(timestamp);
+                // Format as "YYYY-MM-DD HH:MM:SS"
+                const pad = num => num.toString().padStart(2, '0');
+                return `${date.getFullYear()}-${pad(date.getMonth()+1)}-${pad(date.getDate())} ` +
+                       `${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
+            } catch (e) {
+                return timestamp; // Return raw value if parsing fails
+            }
+        }
+
+        // Function to create popup content
+        function createPopupContent(item, allData, showTrend = true) {
+            let content = `<b>${item.filename || 'Unknown'}</b><br>`;
+
+            // Timestamp display
+            let timestampDisplay = '';
+            if (item.capture_date && item.capture_time) {
+                timestampDisplay = `${item.capture_date} ${item.capture_time}`;
+            } else if (item.timestamp) {
+                timestampDisplay = formatDateTime(item.timestamp);
+            }
+            if (timestampDisplay) {
+                content += `<small>${timestampDisplay}</small><hr>`;
+            }
+
+            content += `Location: ${item.latitude?.toFixed(6) || 'N/A'}, ${item.longitude?.toFixed(6) || 'N/A'}<br>`;
+            if (item.altitude) {
+                content += `Altitude: ${item.altitude} m<br><br>`;
+            }
+
+            // Detections
+            if (item.detections && Object.keys(item.detections).length > 0) {
+                content += '<b>Detections:</b><br>';
+                for (const [level, count] of Object.entries(item.detections)) {
+                    const healthStatus = translateLevel(level);
+                    content += `<div class="detection-item ${level}">${healthStatus}: ${count}</div>`;
+                }
+                content += `<br><b>Total:</b> ${item.total_objects || Object.values(item.detections).reduce((a, b) => a + b, 0)}`;
+            } else {
+                content += '<br>No detections';
+            }
+
+            // Always show summary based on average level, but +1 if between 12:00 and 15:00
+            let avgLevel = calculateAverageLevel(item.detections);
+            if (isBetweenNoonAnd3PM(item) && avgLevel !== null) {
+                avgLevel = Math.min(avgLevel + 1, 5);
+            }
+            let solutionTitle = '';
+            let solutionText = '';
+            let solutionClass = '';
+            let solutionIcon = '';
+
+            if (avgLevel >= 4.5) {
+                solutionTitle = "Level 5 - Excellent Health";
+                solutionText = "The plants in this area are in optimal condition. No action is needed at this time.";
+                solutionClass = "solution-good";
+                solutionIcon = "&#x2705;"; // ✅
+            } else if (avgLevel >= 3.5) {
+                solutionTitle = "Level 4 - Good Health";
+                solutionText = "The plants are healthy. Continue with regular monitoring and maintenance.";
+                solutionClass = "solution-good";
+                solutionIcon = "&#x2705;"; // ✅
+            } else if (avgLevel >= 2.5) {
+                solutionTitle = "Level 3 - Moderate Health";
+                solutionText = "Monitor this area further using a pH meter and water flow meter. Check nitrogen levels and apply fertilizer as needed for optimal growth.";
+                solutionClass = "solution-warning";
+                solutionIcon = "&#9888;&#65039;"; // ⚠️
+            } else if (avgLevel >= 2) {
+                solutionTitle = "Level 2 - Low Health";
+                solutionText = "Immediate action required: Apply fertilizer and inspect for pests or nitrogen deficiency to restore plant health.";
+                solutionClass = "solution-severe";
+                solutionIcon = "&#x26A0;&#xFE0F;"; // ⚠️
+            } else {
+                solutionTitle = "No Health Data";
+                solutionText = "No health data available for recommendations.";
+                solutionClass = "solution-none";
+                solutionIcon = "";
+            }
+            if (avgLevel) {
+                content += `
+                    <div class="solution-panel ${solutionClass}">
+                        <div class="solution-title">${solutionIcon} ${solutionTitle}</div>
+                        <div class="solution-content">${solutionText}</div>
+                    </div>
+                `;
+            }
+
+            // Show historical trend if possible
+            if (showTrend && allData) {
+                const trend = getHistoricalTrend(item, allData, item.timestamp);
+                const chartId = `trendChart_${item.filename.replace(/\W/g, '')}_${Math.floor(Math.random()*100000)}`;
+                content += `<div class="trend-panel"><b>Historical Trend:</b><br>`;
+                if (trend.length === 0) {
+                    content += `<span style="color:#888;">No data</span>`;
+                } else {
+                    content += `<canvas id="${chartId}" width="320" height="120"></canvas>`;
+                    setTimeout(() => {
+                        const ctx = document.getElementById(chartId);
+                        if (ctx) {
+                            new Chart(ctx, {
+                                type: 'line',
+                                data: {
+                                    labels: trend.map(t => t.date),
+                                    datasets: [{
+                                        label: 'Avg Health',
+                                        data: trend.map(t => t.avg),
+                                        borderColor: '#0078A8',
+                                        backgroundColor: 'rgba(0,120,168,0.1)',
+                                        pointBackgroundColor: trend.map(t => t.isCurrent ? '#dc3545' : '#0078A8'),
+                                        pointRadius: trend.map(t => t.isCurrent ? 6 : 3),
+                                        fill: true,
+                                        tension: 0.2
+                                    }]
+                                },
+                                options: {
+                                    scales: {
+                                        y: {
+                                            min: 2,
+                                            max: 5,
+                                            title: { display: true, text: 'Health Level' }
+                                        }
+                                    },
+                                    plugins: {
+                                        legend: { display: false },
+                                        tooltip: {
+                                            callbacks: {
+                                                label: function(context) {
+                                                    return `Avg: ${context.parsed.y}`;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                    }, 100);
+                }
+                content += `</div>`;
+            }
+
+            return content;
+        }
+
+        // Function to create history item with improved timestamp display
+        function createHistoryItem(item, index) {
+            const historyItem = document.createElement('div');
+            historyItem.className = 'history-item';
+            historyItem.dataset.index = index;
+            
+            // Count detections by level
+            const detectionCounts = {};
+            if (item.detections) {
+                for (const [level, count] of Object.entries(item.detections)) {
+                    const healthStatus = translateLevel(level);
+                    detectionCounts[healthStatus] = (detectionCounts[healthStatus] || 0) + count;
+                }
+            }
+            
+            const detectionSummary = Object.entries(detectionCounts)
+                .map(([status, count]) => `${status}: ${count}`)
+                .join(', ');
+            
+            // Determine the best available timestamp
+            let displayTime = '';
+            if (item.capture_date && item.capture_time) {
+                displayTime = `${item.capture_date} ${item.capture_time}`;
+            } else if (item.timestamp) {
+                displayTime = formatDateTime(item.timestamp);
+            } else {
+                displayTime = 'Time unknown';
+            }
+            
+            // Calculate average level for summary
+            const avgLevel = calculateAverageLevel(item.detections);
+            let avgLevelDisplay = '';
+            if (avgLevel) {
+                avgLevelDisplay = ` | Avg: ${avgLevel.toFixed(2)}`;
+            }
+            
+            historyItem.innerHTML = `
+                <div class="history-header">
+                    <span>${item.filename || 'Unknown Detection'}</span>
+                    <span class="history-time">${displayTime}</span>
+                </div>
+                <div class="history-summary">
+                    ${detectionSummary || 'No detections'}${avgLevelDisplay} | 
+                    Location: ${item.latitude ? item.latitude.toFixed(4) : 'N/A'}, 
+                    ${item.longitude ? item.longitude.toFixed(4) : 'N/A'}
+                    ${item.altitude ? `| Alt: ${item.altitude}m` : ''}
+                </div>
+            `;
+            
+            historyItem.addEventListener('click', () => {
+                // Remove active class from previous item
+                if (currentActiveHistoryItem) {
+                    currentActiveHistoryItem.classList.remove('active');
+                }
+                
+                // Set new active item
+                historyItem.classList.add('active');
+                currentActiveHistoryItem = historyItem;
+                
+                // Center map on this item
+                if (item.latitude && item.longitude) {
+                    map.setView([item.latitude, item.longitude], 16);
+                    
+                    // Highlight the corresponding marker
+                    const markerKey = `${item.latitude},${item.longitude}`;
+                    if (markers[markerKey]) {
+                        if (currentActiveMarker) {
+                            currentActiveMarker.setStyle({color: '#000', weight: 1});
+                        }
+                        markers[markerKey].setStyle({color: '#ff00ff', weight: 3});
+                        markers[markerKey].openPopup();
+                        currentActiveMarker = markers[markerKey];
+                    }
+                }
+                
+                // Update info panel
+                document.getElementById('info-panel').innerHTML = createPopupContent(item, window.allDetectionsData, false);
+            });
+            
+            return historyItem;
+        }
+
+        // Load and display data
+        function loadData() {
+            fetch('drone_data.json')
+                .then(response => response.json())
+                .then(data => {
+                    if (!data || data.length === 0) {
+                        document.getElementById('info-panel').innerHTML = 
+                            '<h3>No Data</h3><p>No drone data found.</p>';
+                        return;
+                    }
+
+                    // Clear previous markers
+                    markersLayer.clearLayers();
+                    Object.keys(markers).forEach(key => delete markers[key]);
+                    
+                    // Clear history list
+                    const historyList = document.getElementById('history-list');
+                    historyList.innerHTML = '';
+                    
+                    // Process each detection
+                    data.forEach((item, index) => {
+                        if (!item.latitude || !item.longitude) return;
+                        
+                        // Add to history
+                        historyList.appendChild(createHistoryItem(item, index));
+                        
+                        const markerKey = `${item.latitude},${item.longitude}`;
+                        const popupContent = createPopupContent(item, window.allDetectionsData);
+                        
+                        // Create or update marker
+                        if (!markers[markerKey]) {
+                            markers[markerKey] = L.circleMarker(
+                                [item.latitude, item.longitude],
+                                {
+                                    radius: 8,
+                                    fillColor: getColorForDetections(item.detections),
+                                    color: '#000',
+                                    weight: 1,
+                                    opacity: 1,
+                                    fillOpacity: 0.8
+                                }
+                            ).addTo(markersLayer);
+                            
+                            markers[markerKey].bindPopup(popupContent);
+                            
+                            // Click event for info panel
+                            markers[markerKey].on('click', function() {
+                                const refreshedContent = createPopupContent(item, window.allDetectionsData); // popup with trend
+                                markers[markerKey].setPopupContent(refreshedContent);
+                                // Info panel without trend
+                                document.getElementById('info-panel').innerHTML = createPopupContent(item, window.allDetectionsData, false);
+                            });
+                        }
+                    });
+                    
+                    // Set view to first item if available
+                    if (data[0]?.latitude && data[0]?.longitude) {
+                        map.setView([data[0].latitude, data[0].longitude], 16);
+                        document.getElementById('info-panel').innerHTML = createPopupContent(data[0], window.allDetectionsData);
+                        
+                        // Highlight first history item
+                        const firstHistoryItem = document.querySelector('.history-item');
+                        if (firstHistoryItem) {
+                            firstHistoryItem.classList.add('active');
+                            currentActiveHistoryItem = firstHistoryItem;
+                        }
+                    }
+
+                    // Store all detections data globally for trend analysis
+                    window.allDetectionsData = data;
+                })
+                .catch(error => {
+                    console.error('Error loading drone data:', error);
+                    document.getElementById('info-panel').innerHTML = 
+                        '<h3>Error</h3><p>Could not load drone data.</p>';
+                });
+        }
+
+        function getColorForDetections(detections) {
+            if (!detections) return 'gray';
+            // Return color based on most critical level detected
+            if (detections.level5) return 'red';
+            if (detections.level4) return 'blue';
+            if (detections.level3) return 'green';
+            if (detections.level2) return 'orange';
+            return 'gray';
+        }
+
+        // Layer control functionality
+        document.getElementById('street-btn').addEventListener('click', function() {
+            document.getElementById('map').style.display = 'block';
+            document.getElementById('webodm-iframe').style.display = 'none';
+            map.eachLayer(layer => {
+                if (Object.values(baseLayers).includes(layer)) {
+                    map.removeLayer(layer);
+                }
+            });
+            baseLayers["Street Map"].addTo(map);
+            setActiveButton('street-btn');
+        });
+
+        document.getElementById('satellite-btn').addEventListener('click', function() {
+            document.getElementById('map').style.display = 'block';
+            document.getElementById('webodm-iframe').style.display = 'none';
+            map.eachLayer(layer => {
+                if (Object.values(baseLayers).includes(layer)) {
+                    map.removeLayer(layer);
+                }
+            });
+            baseLayers["Satellite"].addTo(map);
+            setActiveButton('satellite-btn');
+        });
+
+        document.getElementById('hybrid-btn').addEventListener('click', function() {
+            document.getElementById('map').style.display = 'block';
+            document.getElementById('webodm-iframe').style.display = 'none';
+            map.eachLayer(layer => {
+                if (Object.values(baseLayers).includes(layer)) {
+                    map.removeLayer(layer);
+                }
+            });
+            baseLayers["Hybrid"].addTo(map);
+            setActiveButton('hybrid-btn');
+        });
+
+        function setActiveButton(activeId) {
+            document.querySelectorAll('.layer-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.getElementById(activeId).classList.add('active');
+        }
+
+        // Refresh button functionality
+        document.getElementById('refresh-btn').addEventListener('click', loadData);
+
+        // Initial load
+        loadData();
+
+        // Add at the top, after other utility functions
+        function getHistoricalTrend(item, allData, currentTimestamp) {
+            if (!item.latitude || !item.longitude) return [];
+            // Find all detections within 30.9 meters of this point (0.30 hectare)
+            const trend = allData
+                .filter(e =>
+                    e.latitude && e.longitude &&
+                    isNearby(item.latitude, item.longitude, e.latitude, e.longitude, 30.9)
+                )
+                .sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+            return trend.map(e => {
+                let avg = calculateAverageLevel(e.detections);
+                if (isBetweenNoonAnd3PM(e) && avg !== null) {
+                    avg = Math.min(avg + 1, 5);
+                }
+                return {
+                    date: e.capture_date || e.timestamp?.split('T')[0] || '',
+                    avg: avg,
+                    isCurrent: e.timestamp === currentTimestamp
+                };
+            });
+        }
+
+        function isNearby(lat1, lon1, lat2, lon2, maxDistanceMeters = 2522) {
+            // Haversine formula
+            function toRad(x) { return x * Math.PI / 180; }
+            const R = 6371000; // Earth radius in meters
+            const dLat = toRad(lat2 - lat1);
+            const dLon = toRad(lon2 - lon1);
+            const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                      Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+                      Math.sin(dLon/2) * Math.sin(dLon/2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            return (R * c) <= maxDistanceMeters;
+        }
+
+        function isBetweenNoonAnd3PM(item) {
+            let hour = null;
+            if (item.capture_time) {
+                hour = parseInt(item.capture_time.split(':')[0]);
+            } else if (item.timestamp) {
+                const date = new Date(item.timestamp);
+                hour = date.getHours();
+            }
+            return hour !== null && hour >= 12 && hour < 15;
+        }
+
+        // Debugging: Log trend data for a specific marker
+        function logTrendData(item, allData) {
+            const trend = getHistoricalTrend(item, allData, item.timestamp);
+            console.log('Trend for this marker:', trend);
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</body>
+</html>
