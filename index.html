@@ -443,7 +443,7 @@
                                         y: {
                                             min: 2,
                                             max: 5,
-                                            title: { display: true, text: 'Health Level' }
+                                            title: { display: true, text: ' Health Level' }
                                         }
                                     },
                                     plugins: {
@@ -639,8 +639,6 @@
 
         // Layer control functionality
         document.getElementById('street-btn').addEventListener('click', function() {
-            document.getElementById('map').style.display = 'block';
-            document.getElementById('webodm-iframe').style.display = 'none';
             map.eachLayer(layer => {
                 if (Object.values(baseLayers).includes(layer)) {
                     map.removeLayer(layer);
@@ -651,8 +649,6 @@
         });
 
         document.getElementById('satellite-btn').addEventListener('click', function() {
-            document.getElementById('map').style.display = 'block';
-            document.getElementById('webodm-iframe').style.display = 'none';
             map.eachLayer(layer => {
                 if (Object.values(baseLayers).includes(layer)) {
                     map.removeLayer(layer);
@@ -663,8 +659,6 @@
         });
 
         document.getElementById('hybrid-btn').addEventListener('click', function() {
-            document.getElementById('map').style.display = 'block';
-            document.getElementById('webodm-iframe').style.display = 'none';
             map.eachLayer(layer => {
                 if (Object.values(baseLayers).includes(layer)) {
                     map.removeLayer(layer);
