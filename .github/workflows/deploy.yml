@@ -17,6 +17,7 @@ jobs:
           host: ${{ secrets.SERVER_IP }}
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
+          port: 2221
           script: |
             cd ~/Deteksi-lahan-Pertanian
             git pull origin main
