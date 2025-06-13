@@ -440,9 +440,6 @@
 
             // Always show summary based on average level, but +1 if between 12:00 and 15:00
             let avgLevel = calculateAverageLevel(item.detections);
-            if (isBetweenNoonAnd3PM(item) && avgLevel !== null) {
-                avgLevel = Math.min(avgLevel + 1, 5);
-            }
             let solutionTitle = '';
             let solutionText = '';
             let solutionClass = '';
@@ -765,7 +762,7 @@
         function getHistoricalTrend(item, allData, currentTimestamp) {
             if (!item.latitude || !item.longitude) return [];
             // Find all detections within 30.9 meters of this point (0.30 hectare)
-            const trend = allData
+            const trend = allData   
                 .filter(e =>
                     e.latitude && e.longitude &&
                     isNearby(item.latitude, item.longitude, e.latitude, e.longitude, 3000.9)
@@ -773,9 +770,6 @@
                 .sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
             return trend.map(e => {
                 let avg = calculateAverageLevel(e.detections);
-                if (isBetweenNoonAnd3PM(e) && avg !== null) {
-                    avg = Math.min(avg + 1, 5);
-                }
                 return {
                     date: e.capture_date || e.timestamp?.split('T')[0] || '',
                     avg: avg,
