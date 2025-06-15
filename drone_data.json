@@ -7,7 +7,7 @@
       "level2": 1
     },
     "total_objects": 3,
-    "timestamp": "2025-06-15T23:46:02.491259",
+    "timestamp": "2025-06-16T03:38:56.328674",
     "plot_id": "-7.40611_112.68962",
     "latitude": -7.406114,
     "longitude": 112.689616,
@@ -21,7 +21,7 @@
       "level3": 3
     },
     "total_objects": 3,
-    "timestamp": "2025-06-15T23:46:04.193514",
+    "timestamp": "2025-06-16T03:38:58.294523",
     "plot_id": "-7.40606_112.68963",
     "latitude": -7.406056,
     "longitude": 112.689625,
@@ -35,7 +35,7 @@
       "level2": 6
     },
     "total_objects": 6,
-    "timestamp": "2025-06-15T23:46:05.890186",
+    "timestamp": "2025-06-16T03:39:00.202816",
     "plot_id": "-7.40599_112.68963",
     "latitude": -7.405992,
     "longitude": 112.689633,
@@ -49,7 +49,7 @@
       "level2": 2
     },
     "total_objects": 2,
-    "timestamp": "2025-06-15T23:46:07.980948",
+    "timestamp": "2025-06-16T03:39:02.478911",
     "plot_id": "-7.40596_112.68964",
     "latitude": -7.40596,
     "longitude": 112.689638,
@@ -64,7 +64,7 @@
       "level4": 1
     },
     "total_objects": 5,
-    "timestamp": "2025-06-15T23:46:09.780264",
+    "timestamp": "2025-06-16T03:39:04.662160",
     "plot_id": "-7.4055_112.68977",
     "latitude": -7.405502,
     "longitude": 112.689768,
@@ -73,12 +73,40 @@
     "capture_time": "12:08:37"
   },
   {
+    "filename": "DJI_20250611120843_0049_D.JPG",
+    "detections": {
+      "level3": 4
+    },
+    "total_objects": 4,
+    "timestamp": "2025-06-16T03:39:07.424413",
+    "plot_id": "-7.4056_112.68975",
+    "latitude": -7.4056,
+    "longitude": 112.689754,
+    "altitude": null,
+    "capture_date": "2025-06-11",
+    "capture_time": "12:08:43"
+  },
+  {
+    "filename": "DJI_20250611120845_0050_D.JPG",
+    "detections": {
+      "level3": 3
+    },
+    "total_objects": 3,
+    "timestamp": "2025-06-16T03:39:10.280704",
+    "plot_id": "-7.40563_112.68975",
+    "latitude": -7.405632,
+    "longitude": 112.689749,
+    "altitude": null,
+    "capture_date": "2025-06-11",
+    "capture_time": "12:08:45"
+  },
+  {
     "filename": "DJI_20250611120847_0051_D.JPG",
     "detections": {
       "level4": 1
     },
     "total_objects": 1,
-    "timestamp": "2025-06-15T23:46:12.431579",
+    "timestamp": "2025-06-16T03:39:13.151850",
     "plot_id": "-7.40566_112.68975",
     "latitude": -7.405664,
     "longitude": 112.689745,
@@ -93,7 +121,7 @@
       "level2": 1
     },
     "total_objects": 2,
-    "timestamp": "2025-06-15T23:46:12.987607",
+    "timestamp": "2025-06-16T03:39:13.729682",
     "plot_id": "-7.40569_112.68974",
     "latitude": -7.405695,
     "longitude": 112.689741,
@@ -107,12 +135,96 @@
       "level3": 2
     },
     "total_objects": 2,
-    "timestamp": "2025-06-15T23:46:13.199109",
+    "timestamp": "2025-06-16T03:39:13.953456",
     "plot_id": "-7.40573_112.68974",
     "latitude": -7.405728,
     "longitude": 112.689736,
     "altitude": null,
     "capture_date": "2025-06-11",
     "capture_time": "12:08:51"
+  },
+  {
+    "filename": "DJI_20250611120859_0057_D.JPG",
+    "detections": {
+      "level3": 2
+    },
+    "total_objects": 2,
+    "timestamp": "2025-06-16T03:39:14.491738",
+    "plot_id": "-7.40586_112.68972",
+    "latitude": -7.405856,
+    "longitude": 112.689718,
+    "altitude": null,
+    "capture_date": "2025-06-11",
+    "capture_time": "12:08:59"
+  },
+  {
+    "filename": "DJI_20250611120901_0058_D.JPG",
+    "detections": {
+      "level3": 2
+    },
+    "total_objects": 2,
+    "timestamp": "2025-06-16T03:39:17.513868",
+    "plot_id": "-7.40589_112.68971",
+    "latitude": -7.405888,
+    "longitude": 112.689714,
+    "altitude": null,
+    "capture_date": "2025-06-11",
+    "capture_time": "12:09:01"
+  },
+  {
+    "filename": "DJI_20250611120903_0059_D.JPG",
+    "detections": {
+      "level3": 2
+    },
+    "total_objects": 2,
+    "timestamp": "2025-06-16T03:39:20.523533",
+    "plot_id": "-7.40592_112.68971",
+    "latitude": -7.40592,
+    "longitude": 112.689709,
+    "altitude": null,
+    "capture_date": "2025-06-11",
+    "capture_time": "12:09:03"
+  },
+  {
+    "filename": "DJI_20250611120905_0060_D.JPG",
+    "detections": {
+      "level3": 3
+    },
+    "total_objects": 3,
+    "timestamp": "2025-06-16T03:39:23.484191",
+    "plot_id": "-7.40595_112.68971",
+    "latitude": -7.405952,
+    "longitude": 112.689705,
+    "altitude": null,
+    "capture_date": "2025-06-11",
+    "capture_time": "12:09:05"
+  },
+  {
+    "filename": "DJI_20250611120907_0061_D.JPG",
+    "detections": {
+      "level3": 4
+    },
+    "total_objects": 4,
+    "timestamp": "2025-06-16T03:39:26.552564",
+    "plot_id": "-7.40598_112.6897",
+    "latitude": -7.405984,
+    "longitude": 112.689701,
+    "altitude": null,
+    "capture_date": "2025-06-11",
+    "capture_time": "12:09:07"
+  },
+  {
+    "filename": "DJI_20250611120911_0063_D.JPG",
+    "detections": {
+      "level3": 2
+    },
+    "total_objects": 2,
+    "timestamp": "2025-06-16T03:39:29.502087",
+    "plot_id": "-7.40605_112.68969",
+    "latitude": -7.406048,
+    "longitude": 112.689691,
+    "altitude": null,
+    "capture_date": "2025-06-11",
+    "capture_time": "12:09:11"
   }
 ]
