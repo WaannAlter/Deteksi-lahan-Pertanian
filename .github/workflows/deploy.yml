@@ -22,6 +22,6 @@ jobs:
             cd ~/Deteksi-lahan-Pertanian
             git pull origin main
             if [ -f requirements.txt ]; then pip3 install -r requirements.txt; fi
-            pm2 stop Deteksi-lahan-py || true
-            pm2 delete Deteksi-lahan-py || true
+            pm2 stop Deteksi-lahan || true
+            pm2 delete Deteksi-lahan || true
             pm2 start server.py --interpreter python3 --name Deteksi-lahan
