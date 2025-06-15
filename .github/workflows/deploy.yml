@@ -17,8 +17,10 @@ jobs:
           host: ${{ secrets.SERVER_IP }}
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
-          port: 2221  
+          port: 2221
           script: |
             cd ~/Deteksi-lahan-Pertanian
             git pull origin main
-            pm2 restart Deteksi-lahan
+            pm2 stop Deteksi-lahan || true
+            pm2 delete Deteksi-lahan || true
+            pm2 start "http-server -p 9090" --name Deteksi-lahan
