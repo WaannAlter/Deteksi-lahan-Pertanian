@@ -7,6 +7,22 @@
       "level2": 1
     },
     "total_objects": 3,
+    "timestamp": "2025-06-15T23:01:39.446689",
+    "plot_id": "-7.40611_112.68962",
+    "latitude": -7.406114,
+    "longitude": 112.689616,
+    "altitude": null,
+    "capture_date": "2025-06-11",
+    "capture_time": "15:07:07"
+  },
+  {
+    "filename": "DJI_20250611120707_0001_D.JPG",
+    "detections": {
+      "level5": 1,
+      "level4": 1,
+      "level2": 1
+    },
+    "total_objects": 3,
     "timestamp": "2025-06-15T22:12:37.353937",
     "plot_id": "-7.40611_112.68962",
     "latitude": -7.406114,
