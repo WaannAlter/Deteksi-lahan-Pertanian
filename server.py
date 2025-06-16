@@ -31,7 +31,7 @@ def start_web_server():
     handler = MyHTTPRequestHandler
     with ThreadingTCPServer(("", PORT), handler) as httpd:
         print(f"\nServing visualization at:")
-        print(f"http://localhost:{PORT}/{HTML_FILE}")
+        print(f"https://localhost:{PORT}/{HTML_FILE}")
         print(f"Press Ctrl+C to stop the server\n")
         try:
             webbrowser.open_new_tab(f"http://localhost:{PORT}/{HTML_FILE}")
