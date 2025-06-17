@@ -374,31 +374,24 @@
 
             // Add the web map iframe
             content += `
-    <div style="margin:14px 0; max-width:100%; overflow:auto;">
+    <div style="margin:18px 0; display:flex; justify-content:center; align-items:center;">
+      <div style="
+          background:#222; 
+          border-radius:32px; 
+          padding:12px 6px; 
+          box-shadow:0 2px 12px rgba(0,0,0,0.18);
+          width: 387px;
+          ">
         <iframe 
-            src="http://202.10.40.140:8000/" 
-            width="520" 
-            height="520" 
-            style="border:2px solid #0078A8; border-radius:10px; display:block; margin:auto; background:#f8f8f8;"
-            allowfullscreen
-            loading="lazy"
-            referrerpolicy="no-referrer-when-downgrade"
+          src="http://202.10.40.140:8000/" 
+          width="375" 
+          height="700" 
+          style="border:0; border-radius:24px; background:#fff; display:block;"
+          allowfullscreen
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
         ></iframe>
-        <div style="margin-top:10px; background:#f4f6fa; border-radius:6px; padding:10px 12px; font-size:1em;">
-            <b>Tutorial Navigasi WebODM:</b>
-            <ol style="margin:8px 0 0 18px; padding:0;">
-                <li>Klik <b>ikon menu layer</b> <span style="display:inline-block;vertical-align:middle;">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="#333" viewBox="0 0 16 16" style="vertical-align:middle;">
-                    <path d="M8.211 1.146a1 1 0 0 0-.422 0l-6 1.5A1 1 0 0 0 1 3.5v.634a1 1 0 0 0 .553.894l6 3a1 1 0 0 0 .894 0l6-3A1 1 0 0 0 15 4.134V3.5a1 1 0 0 0-.789-.976l-6-1.5z"/>
-                    <path d="M15 6.634a1 1 0 0 0-.447-.894l-6-3a1 1 0 0 0-.894 0l-6 3A1 1 0 0 0 1 6.634v.634a1 1 0 0 0 .553.894l6 3a1 1 0 0 0 .894 0l6-3A1 1 0 0 0 15 7.268v-.634z"/>
-                    <path d="M15 9.134a1 1 0 0 0-.447-.894l-6-3a1 1 0 0 0-.894 0l-6 3A1 1 0 0 0 1 9.134v.634a1 1 0 0 0 .553.894l6 3a1 1 0 0 0 .894 0l6-3A1 1 0 0 0 15 9.768v-.634z"/>
-                  </svg>
-                </span> di kanan atas.</li>
-                <li>Pilih layer sawah Anda dari daftar.</li>
-                <li>Gunakan fitur zoom dan pan untuk menjelajah peta.</li>
-                <li>Jika ingin tampilan lebih besar, klik kanan dan pilih "Open in new tab".</li>
-            </ol>
-        </div>
+      </div>
     </div>
 `;
 
