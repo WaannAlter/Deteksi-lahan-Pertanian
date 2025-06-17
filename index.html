@@ -182,6 +182,23 @@
         .detection-summary-box.level3 { background: #eafbe7; border-left-color: green; color: #217a36; }
         .detection-summary-box.level4 { background: #e7f1fb; border-left-color: #0078A8; color: #005080; }
         .detection-summary-box.level5 { background: #fde7e7; border-left-color: red; color: #a80000; }
+        .history-group {
+            margin-bottom: 16px;
+        }
+        .history-group .history-header {
+            cursor: pointer;
+            font-weight: bold;
+            background: #e7f1fb;
+            padding: 8px 10px;
+            border-radius: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .history-group .history-content {
+            display: none;
+            padding: 10px 0 0 0;
+        }
     </style>
 </head>
 <body>
@@ -633,6 +650,137 @@
             return historyItem;
         }
 
+        // Group detections by location name using reverse geocoding
+function groupDetectionsByLocation(data, callback) {
+    let groups = {};
+    let pending = data.length;
+    if (pending === 0) return callback(groups);
+    data.forEach(item => {
+        if (item.latitude && item.longitude) {
+            getLocationName(item.latitude, item.longitude, function(locationName) {
+                if (!groups[locationName]) groups[locationName] = [];
+                groups[locationName].push(item);
+                pending--;
+                if (pending === 0) callback(groups);
+            });
+        } else {
+            pending--;
+            if (pending === 0) callback(groups);
+        }
+    });
+}
+
+// Render grouped detection history with chart and collapsible details
+function renderGroupedHistory(groups) {
+    const historyList = document.getElementById('history-list');
+    historyList.innerHTML = '';
+    Object.entries(groups).forEach(([location, items], idx) => {
+        // Group header
+        const groupDiv = document.createElement('div');
+        groupDiv.className = 'history-group';
+        groupDiv.style.marginBottom = '16px';
+
+        // Collapsible header
+        const header = document.createElement('div');
+        header.style.cursor = 'pointer';
+        header.style.fontWeight = 'bold';
+        header.style.background = '#e7f1fb';
+        header.style.padding = '8px 10px';
+        header.style.borderRadius = '6px';
+        header.innerHTML = `<span style="font-size:1.1em;">${location}</span> <span style="float:right;">&#9660;</span>`;
+        groupDiv.appendChild(header);
+
+        // Collapsible content
+        const content = document.createElement('div');
+        content.style.display = 'none';
+        content.style.padding = '10px 0 0 0';
+
+        // Bar chart container
+        const chartId = `chart_${idx}`;
+        content.innerHTML = `<canvas id="${chartId}" height="120"></canvas>`;
+
+        // Detection history list
+        items.sort((a, b) => new Date(b.timestamp || b.capture_date) - new Date(a.timestamp || a.capture_date));
+        items.forEach(item => {
+            const entry = document.createElement('div');
+            entry.className = 'history-item';
+            entry.style.margin = '6px 0';
+            // Only show date/time and detection summary
+            let displayTime = item.capture_date && item.capture_time
+                ? `${item.capture_date} ${item.capture_time}`
+                : formatDateTime(item.timestamp);
+            entry.innerHTML = `
+                <div style="font-size:0.97em;">
+                    <span>${displayTime}</span>
+                    <span style="margin-left:8px;">${getDetectionSummary(item.detections)}</span>
+                </div>
+            `;
+            // Click to show details in info panel
+            entry.addEventListener('click', () => {
+                document.getElementById('info-panel').innerHTML = createPopupContent(item, window.allDetectionsData, true);
+            });
+            content.appendChild(entry);
+        });
+
+        groupDiv.appendChild(content);
+        historyList.appendChild(groupDiv);
+
+        // Toggle collapse
+        header.onclick = () => {
+            content.style.display = content.style.display === 'none' ? 'block' : 'none';
+        };
+
+        // Draw bar chart for this group
+        setTimeout(() => {
+            drawDetectionBarChart(chartId, items);
+        }, 100);
+    });
+}
+
+// Helper: Get detection summary as colored text
+function getDetectionSummary(detections) {
+    if (!detections) return '';
+    let summary = '';
+    if (detections.level5) summary += `<span style="color:#dc3545;background:#fde7e7;border-radius:4px;padding:2px 6px;margin-right:4px;">Healthiest: ${detections.level5}</span>`;
+    if (detections.level4) summary += `<span style="color:#005080;background:#e7f1fb;border-radius:4px;padding:2px 6px;margin-right:4px;">High: ${detections.level4}</span>`;
+    if (detections.level3) summary += `<span style="color:#217a36;background:#eafbe7;border-radius:4px;padding:2px 6px;margin-right:4px;">Medium: ${detections.level3}</span>`;
+    if (detections.level2) summary += `<span style="color:#b26a00;background:#fff4e5;border-radius:4px;padding:2px 6px;margin-right:4px;">Low: ${detections.level2}</span>`;
+    return summary;
+}
+
+// Helper: Draw bar chart using Chart.js
+function drawDetectionBarChart(chartId, items) {
+    const ctx = document.getElementById(chartId);
+    if (!ctx) return;
+    // Prepare data
+    const labels = [];
+    const level2 = [], level3 = [], level4 = [], level5 = [];
+    items.forEach(item => {
+        let label = item.capture_date || (item.timestamp ? formatDateTime(item.timestamp).split(' ')[0] : 'Unknown');
+        labels.push(label);
+        level2.push(item.detections?.level2 || 0);
+        level3.push(item.detections?.level3 || 0);
+        level4.push(item.detections?.level4 || 0);
+        level5.push(item.detections?.level5 || 0);
+    });
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [
+                { label: 'Low', data: level2, backgroundColor: '#fff4e5', borderColor: 'orange', borderWidth: 1 },
+                { label: 'Medium', data: level3, backgroundColor: '#eafbe7', borderColor: 'green', borderWidth: 1 },
+                { label: 'High', data: level4, backgroundColor: '#e7f1fb', borderColor: '#0078A8', borderWidth: 1 },
+                { label: 'Healthiest', data: level5, backgroundColor: '#fde7e7', borderColor: 'red', borderWidth: 1 }
+            ]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { display: true } },
+            scales: { x: { stacked: true }, y: { stacked: true, beginAtZero: true } }
+        }
+    });
+}
         // Load and display data
         function loadData() {
             fetch('drone_data.json')
@@ -745,6 +893,7 @@
 
                     // Store all detections data globally for trend analysis
                     window.allDetectionsData = data;
+                    groupDetectionsByLocation(data, renderGroupedHistory);
                 })
                 .catch(error => {
                     console.error('Error loading drone data:', error);
