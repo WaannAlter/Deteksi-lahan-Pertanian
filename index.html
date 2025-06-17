@@ -182,37 +182,6 @@
         .detection-summary-box.level3 { background: #eafbe7; border-left-color: green; color: #217a36; }
         .detection-summary-box.level4 { background: #e7f1fb; border-left-color: #0078A8; color: #005080; }
         .detection-summary-box.level5 { background: #fde7e7; border-left-color: red; color: #a80000; }
-
-        /* Right Side Panel */
-        #rightPanel {
-            position: fixed;
-            top: 0;
-            right: 0;
-            width: 400px;
-            max-width: 90vw;
-            height: 100vh;
-            background: #f4f6fa;
-            border-left: 1px solid #ccc;
-            transition: width 0.3s;
-            z-index: 1000;
-            overflow: auto;
-        }
-        #toggleRightPanel {
-            position: absolute;
-            left: -35px;
-            top: 20px;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            background: #0078A8;
-            color: #fff;
-            border: none;
-            cursor: pointer;
-            z-index: 1001;
-        }
-        #rightPanelContent {
-            padding: 20px;
-        }
     </style>
 </head>
 <body>
@@ -278,16 +247,6 @@
             (top right).</li>
           <li>Find and select your ricefield layer from the list.</li>
         </ol>
-      </div>
-    </div>
-
-    <!-- Right Side Panel -->
-    <div id="rightPanel" style="position:fixed;top:0;right:0;width:400px;max-width:90vw;height:100vh;background:#f4f6fa;border-left:1px solid #ccc;transition:width 0.3s;z-index:1000;overflow:auto;">
-      <button id="toggleRightPanel" style="position:absolute;left:-35px;top:20px;width:30px;height:30px;border-radius:50%;background:#0078A8;color:#fff;border:none;cursor:pointer;z-index:1001;">&gt;</button>
-      <div id="rightPanelContent" style="padding:20px;">
-        <!-- Your existing right panel content goes here -->
-        <h3>Panel Title</h3>
-        <p>Panel content here...</p>
       </div>
     </div>
 
@@ -863,25 +822,6 @@
         };
         document.getElementById('img-zoom-modal').onclick = function(e) {
             if (e.target === this) this.style.display = 'none';
-        };
-
-        /* Right Side Panel */
-        const rightPanel = document.getElementById('rightPanel');
-        const toggleBtn = document.getElementById('toggleRightPanel');
-        const panelContent = document.getElementById('rightPanelContent');
-        let rightExpanded = true;
-
-        toggleBtn.onclick = function() {
-          if (rightExpanded) {
-            rightPanel.style.width = '40px';
-            panelContent.style.display = 'none';
-            toggleBtn.innerHTML = '&lt;';
-          } else {
-            rightPanel.style.width = '400px';
-            panelContent.style.display = 'block';
-            toggleBtn.innerHTML = '&gt;';
-          }
-          rightExpanded = !rightExpanded;
         };
     </script>
     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="#333" viewBox="0 0 16 16" style="vertical-align:middle;">
