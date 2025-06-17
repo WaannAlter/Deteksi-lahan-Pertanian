@@ -963,7 +963,12 @@ function drawDetectionBarChart(chartId, items) {
         }
 
         // Refresh button functionality
-        document.getElementById('refresh-btn').addEventListener('click', loadData);
+        document.getElementById('refresh-btn').addEventListener('click', function() {
+  locationCache = {};
+  infoPanelCache = {};
+  markerCache = {};
+  loadData();
+});
 
         // Initial load
         loadData();
@@ -1035,22 +1040,57 @@ function drawDetectionBarChart(chartId, items) {
         };
 
         function getLocationName(lat, lon, callback) {
+  const key = `${lat},${lon}`;
+  if (locationCache[key]) {
+    callback(locationCache[key]);
+    return;
+  }
   fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}`)
     .then(response => response.json())
     .then(data => {
-      if (data.address) {
-        callback(data.display_name);
-      } else {
-        callback("Unknown location");
-      }
+      const name = data.address ? data.display_name : "Unknown location";
+      locationCache[key] = name;
+      callback(name);
     })
-    .catch(() => callback("Unknown location"));
+    .catch(() => {
+      locationCache[key] = "Unknown location";
+      callback("Unknown location");
+    });
+}
+
+const locationCache = {};
+const infoPanelCache = {};
+const markerCache = {};
+
+function showInfoPanel(item) {
+  const key = item.filename || `${item.latitude},${item.longitude}`;
+  if (infoPanelCache[key]) {
+    document.getElementById('info-panel').innerHTML = infoPanelCache[key];
+    return;
+  }
+  // ...generate content as before...
+  const content = createPopupContent(item, window.allDetectionsData, true);
+  document.getElementById('info-panel').innerHTML = content;
+  infoPanelCache[key] = content;
+}
+
+function showMarkerPopup(marker, item) {
+  const key = `${item.latitude},${item.longitude}`;
+  if (markerCache[key]) {
+    marker.bindPopup(markerCache[key]).openPopup();
+    return;
+  }
+  getLocationName(item.latitude, item.longitude, function(locationName) {
+    const popupContent = `<b>${locationName}</b><br>${getDetectionSummary(item.detections)}`;
+    markerCache[key] = popupContent;
+    marker.bindPopup(popupContent).openPopup();
+  });
 }
     </script>
-    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="#333" viewBox="0 0 16 16" style="vertical-align:middle;">
-      <path d="M8.211 1.146a1 1 0 0 0-.422 0l-6 1.5A1 1 0 0 0 1 3.5v.634a1 1 0 0 0 .553.894l6 3a1 1 0 0 0 .894 0l6-3A1 1 0 0 0 15 4.134V3.5a1 1 0 0 0-.789-.976l-6-1.5z"/>
-      <path d="M15 6.634a1 1 0 0 0-.447-.894l-6-3a1 1 0 0 0-.894 0l-6 3A1 1 0 0 0 1 6.634v.634a1 1 0 0 0 .553.894l6 3a1 1 0 0 0 .894 0l6-3A1 1 0 0 0 15 7.268v-.634z"/>
-      <path d="M15 9.134a1 1 0 0 0-.447-.894l-6-3a1 1 0 0 0-.894 0l-6 3A1 1 0 0 0 1 9.134v.634a1 1 0 0 0 .553.894l6 3a1 1 0 0 0 .894 0l6-3A1 1 0 0 0 15 9.768v-.634z"/>
-    </svg>
-</body>
-</html>
+
+
+
+
+
+
+</body>    </svg>      <path d="M15 9.134a1 1 0 0 0-.447-.894l-6-3a1 1 0 0 0-.894 0l-6 3A1 1 0 0 0 1 9.134v.634a1 1 0 0 0 .553.894l6 3a1 1 0 0 0 .894 0l6-3A1 1 0 0 0 15 9.768v-.634z"/>      <path d="M15 6.634a1 1 0 0 0-.447-.894l-6-3a1 1 0 0 0-.894 0l-6 3A1 1 0 0 0 1 6.634v.634a1 1 0 0 0 .553.894l6 3a1 1 0 0 0 .894 0l6-3A1 1 0 0 0 15 7.268v-.634z"/>      <path d="M8.211 1.146a1 1 0 0 0-.422 0l-6 1.5A1 1 0 0 0 1 3.5v.634a1 1 0 0 0 .553.894l6 3a1 1 0 0 0 .894 0l6-3A1 1 0 0 0 15 4.134V3.5a1 1 0 0 0-.789-.976l-6-1.5z"/>    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="#333" viewBox="0 0 16 16" style="vertical-align:middle;"></html>
