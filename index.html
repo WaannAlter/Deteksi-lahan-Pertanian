@@ -406,7 +406,19 @@
                 content += `<small>${timestampDisplay}</small><hr>`;
             }
 
-            content += `Location: ${item.latitude?.toFixed(6) || 'N/A'}, ${item.longitude?.toFixed(6) || 'N/A'}<br>`;
+            // --- Location display with reverse geocoding ---
+            const locationId = `location_${item.latitude}_${item.longitude}`.replace(/\./g, '_');
+            content += `<span id="${locationId}">Location: ${item.latitude?.toFixed(6) || 'N/A'}, ${item.longitude?.toFixed(6) || 'N/A'} (loading...)</span><br>`;
+            setTimeout(() => {
+              if (item.latitude && item.longitude) {
+                getLocationName(item.latitude, item.longitude, function(locationName) {
+                  const el = document.getElementById(locationId);
+                  if (el) el.innerHTML = `Location: ${locationName} (${item.latitude?.toFixed(6)}, ${item.longitude?.toFixed(6)})`;
+                });
+              }
+            }, 100);
+            // --- End location display ---
+
             if (item.altitude) {
                 content += `Altitude: ${item.altitude} m<br><br>`;
             }
@@ -816,6 +828,19 @@
         document.getElementById('img-zoom-modal').onclick = function(e) {
             if (e.target === this) this.style.display = 'none';
         };
+
+        function getLocationName(lat, lon, callback) {
+  fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}`)
+    .then(response => response.json())
+    .then(data => {
+      if (data.address) {
+        callback(data.display_name);
+      } else {
+        callback("Unknown location");
+      }
+    })
+    .catch(() => callback("Unknown location"));
+}
     </script>
     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="#333" viewBox="0 0 16 16" style="vertical-align:middle;">
       <path d="M8.211 1.146a1 1 0 0 0-.422 0l-6 1.5A1 1 0 0 0 1 3.5v.634a1 1 0 0 0 .553.894l6 3a1 1 0 0 0 .894 0l6-3A1 1 0 0 0 15 4.134V3.5a1 1 0 0 0-.789-.976l-6-1.5z"/>
