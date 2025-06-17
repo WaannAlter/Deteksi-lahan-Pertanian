@@ -586,6 +586,10 @@
                 avgLevelDisplay = `| Avg: ${avgLevel.toFixed(2)}`;
             }
             
+            // Add a placeholder span for the location name
+            const histLocId = `histloc_${index}_${item.latitude}_${item.longitude}`.replace(/\./g, '_');
+            let locationHtml = `<span id="${histLocId}">Location: ${item.latitude ? item.latitude.toFixed(4) : 'N/A'}, ${item.longitude ? item.longitude.toFixed(4) : 'N/A'} (loading...)</span>`;
+            
             historyItem.innerHTML = `
                 <div class="history-header">
                     <span>${item.filename || 'Unknown Detection'}</span>
@@ -593,11 +597,19 @@
                 </div>
                 <div class="history-summary">
                     ${detectionSummary || 'No detections'} ${avgLevelDisplay} | 
-                    Location: ${item.latitude ? item.latitude.toFixed(4) : 'N/A'}, 
-                    ${item.longitude ? item.longitude.toFixed(4) : 'N/A'}
+                    ${locationHtml}
                     ${item.altitude ? `| Alt: ${item.altitude}m` : ''}
                 </div>
             `;
+            
+            setTimeout(() => {
+              if (item.latitude && item.longitude) {
+                getLocationName(item.latitude, item.longitude, function(locationName) {
+                  const el = document.getElementById(histLocId);
+                  if (el) el.innerHTML = `Location: ${locationName} (${item.latitude?.toFixed(4)}, ${item.longitude?.toFixed(4)})`;
+                });
+              }
+            }, 100);
             
             historyItem.addEventListener('click', () => {
                 // Remove active class from previous item
