@@ -101,7 +101,7 @@
             bottom: 10px;
             width: 340px; /* match left-panel */
             z-index: 1000;
-            height: 260px;
+            height: 340px; /* Increased from 260px */
             overflow-y: auto;
             background: #f5f5f5;
             border-radius: 5px;
@@ -768,16 +768,28 @@ function drawDetectionBarChart(chartId, items) {
         data: {
             labels: labels,
             datasets: [
-                { label: 'Low', data: level2, backgroundColor: '#fff4e5', borderColor: 'orange', borderWidth: 1 },
-                { label: 'Medium', data: level3, backgroundColor: '#eafbe7', borderColor: 'green', borderWidth: 1 },
-                { label: 'High', data: level4, backgroundColor: '#e7f1fb', borderColor: '#0078A8', borderWidth: 1 },
-                { label: 'Healthiest', data: level5, backgroundColor: '#fde7e7', borderColor: 'red', borderWidth: 1 }
+                { label: 'Low', data: level2, backgroundColor: '#ffa726', borderColor: '#ffa726', borderWidth: 1, stack: 'Stack 0' },
+                { label: 'Medium', data: level3, backgroundColor: '#66bb6a', borderColor: '#66bb6a', borderWidth: 1, stack: 'Stack 0' },
+                { label: 'High', data: level4, backgroundColor: '#42a5f5', borderColor: '#42a5f5', borderWidth: 1, stack: 'Stack 0' },
+                { label: 'Healthiest', data: level5, backgroundColor: '#ef5350', borderColor: '#ef5350', borderWidth: 1, stack: 'Stack 0' }
             ]
         },
         options: {
             responsive: true,
-            plugins: { legend: { display: true } },
-            scales: { x: { stacked: true }, y: { stacked: true, beginAtZero: true } }
+            plugins: { 
+                legend: { display: true },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return `${context.dataset.label}: ${context.parsed.y}`;
+                        }
+                    }
+                }
+            },
+            scales: { 
+                x: { stacked: true }, 
+                y: { stacked: true, beginAtZero: true }
+            }
         }
     });
 }
