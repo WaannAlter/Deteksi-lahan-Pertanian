@@ -34,7 +34,7 @@ def start_web_server():
         print(f"http://localhost:{PORT}/{HTML_FILE}")
         print(f"Press Ctrl+C to stop the server\n")
         try:
-            webbrowser.open_new_tab(f"http://localhost:{PORT}/{HTML_FILE}")
+            webbrowser.open_new_tab(f"https://localhost:{PORT}/{HTML_FILE}")
             httpd.serve_forever()
         except KeyboardInterrupt:
             print("\nServer stopped by user")
