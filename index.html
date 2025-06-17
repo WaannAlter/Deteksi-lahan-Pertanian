@@ -679,50 +679,6 @@
                                     map.setView([item.latitude, item.longitude], 18, { animate: true });
                                     document.getElementById('info-panel').innerHTML = createPopupContent(item, window.allDetectionsData, true);
                                 });
-
-                                // New mouseover/mouseout events for small popups
-                                markers[markerKey].on('mouseover', function(e) {
-                                    getLocationName(item.latitude, item.longitude, function(locationName) {
-                                        // Get detection level and color
-                                        let levelText = '';
-                                        let levelColor = '';
-                                        if (item.detections) {
-                                            if (item.detections.level5) {
-                                                levelText = 'Healthiest';
-                                                levelColor = '#dc3545'; // red
-                                            } else if (item.detections.level2) {
-                                                levelText = 'Low Health';
-                                                levelColor = 'orange';
-                                            } else if (item.detections.level3) {
-                                                levelText = 'Medium Health';
-                                                levelColor = 'green';
-                                            } else if (item.detections.level4) {
-                                                levelText = 'High Health';
-                                                levelColor = 'blue';
-                                            }
-                                        }
-                                        // Small popup content
-                                        const popupContent = `
-                                            <div style="font-size:13px;min-width:120px;">
-                                                <b>${locationName}</b><br>
-                                                <span style="display:inline-block;vertical-align:middle;
-                                                    background:${levelColor}10;
-                                                    color:${levelColor};
-                                                    border-left:4px solid ${levelColor};
-                                                    border-radius:4px;
-                                                    padding:2px 8px 2px 6px;
-                                                    margin-top:4px;
-                                                    font-weight:bold;">
-                                                    ${levelText}
-                                                </span>
-                                            </div>
-                                        `;
-                                        markers[markerKey].bindPopup(popupContent).openPopup();
-                                    });
-                                });
-                                markers[markerKey].on('mouseout', function(e) {
-                                    markers[markerKey].closePopup();
-                                });
                             }
                         }
 
